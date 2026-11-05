@@ -36,32 +36,34 @@
         "flatten": 1,
         "linear": 1
       },
-      "est_us": 106.06,
+      "est_us": 117.24,
       "cross_in": [],
       "cross_out": [],
       "reason": "算子在 APU 支持表内且计算密集，放 NPU 取得最高能效"
     }
   ],
   "search_trace": {
-    "initial_us": 574.07,
-    "final_us": 106.06,
-    "improvement_pct": 81.53,
-    "iterations": 1800,
-    "accepted_moves": 62
+    "initial_us": 119.24,
+    "final_us": 117.24,
+    "improvement_pct": 1.68,
+    "iterations": 1567,
+    "accepted_moves": 1
   },
   "simulation": {
-    "makespan_us": 106.06,
-    "steady_frame_us": 106.06,
-    "throughput_fps": 9428.98,
-    "total_compute_us": 16.06,
-    "total_transfer_us": 0,
+    "makespan_us": 117.24,
+    "steady_frame_us": 117.24,
+    "throughput_fps": 8529.76,
+    "total_compute_us": 27.24,
+    "total_transfer_us": 0.0,
+    "dma_busy_us": 0.0,
+    "transfer_edges": 0,
     "total_launch_us": 90.0,
-    "critical_path_us": 106.06,
+    "critical_path_us": 117.24,
     "overlap_pairs": 0,
     "backend_busy_us": {
       "cpu": 0.0,
       "gpu": 0.0,
-      "npu": 106.06
+      "npu": 117.24
     },
     "utilization": {
       "cpu": 0.0,

@@ -89,9 +89,17 @@ GPU 的优势在于非线性/归一化（SiLU/GELU/Softmax/LayerNorm）吞吐远
 **buffer type / layout / stride / align**（NHWC vs NCHW、AHWB vs GL texture 等）。
 
 - 参考后端用统一 `f32` 向量，跳过转换；
+- **缓冲按 slot 共享**：`manifest.memory.slots` 给出每个共享缓冲槽的字节数，`Tensor.slot`
+  指明张量落在哪个槽。编译期已用依赖偏序（happens-before）证明同一槽内的张量不会并发读写，
+  因此运行时只需为每个槽分配一块 `AHardwareBuffer` / DMA-BUF，而非每帧给每个张量各分一块。
+  多帧流水时每帧独立一套槽池，峰值 = 单帧峰值 × 在飞帧数。
+- **view 算子是别名**：reshape / flatten / identity 的输出与其根张量同槽，后端可零拷贝；
+  若输出为常驻（如图输出），运行时改走真实拷贝，不得指向可复用槽。
 - **真机必须实现协商**：`execute()` 时校验 `store` 中张量是否满足该后端 buffer 要求，
   不满足则按 `chip.json` 的 `layout_convert_us` 转换一次。若 NPU 只吃特定对齐 AHWB、
   而 GPU 产出 GL texture，每帧都要转换——这是零拷贝失效的真实代价，已在代价模型里计入。
+  注意共享槽不能跨越 buffer type 边界：不同后端要求不同 buffer type 时，应为其分配独立槽，
+  由编译期 `memory.py` 的 slot 约束统一处理。
 
 ---
 

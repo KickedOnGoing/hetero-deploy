@@ -2,7 +2,7 @@
   "version": "1.0",
   "producer": "hx-compile",
   "graph": {
-    "name": "model",
+    "name": "HeteroNet",
     "inputs": [
       {
         "id": "x",
@@ -16,7 +16,8 @@
         "kind": "input",
         "offset": -1,
         "bytes": 12288,
-        "producer": ""
+        "producer": "",
+        "slot": -1
       }
     ],
     "outputs": [
@@ -30,7 +31,8 @@
         "kind": "output",
         "offset": -1,
         "bytes": 40,
-        "producer": "sigmoid"
+        "producer": "sigmoid",
+        "slot": -1
       }
     ]
   },
@@ -47,29 +49,8 @@
       "kind": "weight",
       "offset": 0,
       "bytes": 3456,
-      "producer": ""
-    },
-    "p_stem_1_weight": {
-      "id": "p_stem_1_weight",
-      "dtype": "f32",
-      "shape": [
-        32
-      ],
-      "kind": "weight",
-      "offset": 3456,
-      "bytes": 128,
-      "producer": ""
-    },
-    "p_stem_1_bias": {
-      "id": "p_stem_1_bias",
-      "dtype": "f32",
-      "shape": [
-        32
-      ],
-      "kind": "weight",
-      "offset": 3584,
-      "bytes": 128,
-      "producer": ""
+      "producer": "",
+      "slot": -1
     },
     "p_branch_a_0_0_weight": {
       "id": "p_branch_a_0_0_weight",
@@ -81,31 +62,10 @@
         3
       ],
       "kind": "weight",
-      "offset": 3712,
+      "offset": 3456,
       "bytes": 73728,
-      "producer": ""
-    },
-    "p_branch_a_0_1_weight": {
-      "id": "p_branch_a_0_1_weight",
-      "dtype": "f32",
-      "shape": [
-        64
-      ],
-      "kind": "weight",
-      "offset": 77440,
-      "bytes": 256,
-      "producer": ""
-    },
-    "p_branch_a_0_1_bias": {
-      "id": "p_branch_a_0_1_bias",
-      "dtype": "f32",
-      "shape": [
-        64
-      ],
-      "kind": "weight",
-      "offset": 77696,
-      "bytes": 256,
-      "producer": ""
+      "producer": "",
+      "slot": -1
     },
     "p_branch_a_1_0_weight": {
       "id": "p_branch_a_1_0_weight",
@@ -117,31 +77,10 @@
         3
       ],
       "kind": "weight",
-      "offset": 77952,
+      "offset": 77184,
       "bytes": 147456,
-      "producer": ""
-    },
-    "p_branch_a_1_1_weight": {
-      "id": "p_branch_a_1_1_weight",
-      "dtype": "f32",
-      "shape": [
-        64
-      ],
-      "kind": "weight",
-      "offset": 225408,
-      "bytes": 256,
-      "producer": ""
-    },
-    "p_branch_a_1_1_bias": {
-      "id": "p_branch_a_1_1_bias",
-      "dtype": "f32",
-      "shape": [
-        64
-      ],
-      "kind": "weight",
-      "offset": 225664,
-      "bytes": 256,
-      "producer": ""
+      "producer": "",
+      "slot": -1
     },
     "p_branch_a_4_weight": {
       "id": "p_branch_a_4_weight",
@@ -151,9 +90,10 @@
         64
       ],
       "kind": "weight",
-      "offset": 225920,
+      "offset": 224640,
       "bytes": 16384,
-      "producer": ""
+      "producer": "",
+      "slot": -1
     },
     "p_branch_a_4_bias": {
       "id": "p_branch_a_4_bias",
@@ -162,9 +102,10 @@
         64
       ],
       "kind": "weight",
-      "offset": 242304,
+      "offset": 241024,
       "bytes": 256,
-      "producer": ""
+      "producer": "",
+      "slot": -1
     },
     "p_branch_b_0_weight": {
       "id": "p_branch_b_0_weight",
@@ -176,9 +117,10 @@
         3
       ],
       "kind": "weight",
-      "offset": 242560,
+      "offset": 241280,
       "bytes": 36864,
-      "producer": ""
+      "producer": "",
+      "slot": -1
     },
     "p_branch_b_0_bias": {
       "id": "p_branch_b_0_bias",
@@ -187,9 +129,10 @@
         32
       ],
       "kind": "weight",
-      "offset": 279424,
+      "offset": 278144,
       "bytes": 128,
-      "producer": ""
+      "producer": "",
+      "slot": -1
     },
     "p_branch_b_2_weight": {
       "id": "p_branch_b_2_weight",
@@ -201,9 +144,10 @@
         3
       ],
       "kind": "weight",
-      "offset": 279552,
+      "offset": 278272,
       "bytes": 36864,
-      "producer": ""
+      "producer": "",
+      "slot": -1
     },
     "p_branch_b_2_bias": {
       "id": "p_branch_b_2_bias",
@@ -212,9 +156,10 @@
         32
       ],
       "kind": "weight",
-      "offset": 316416,
+      "offset": 315136,
       "bytes": 128,
-      "producer": ""
+      "producer": "",
+      "slot": -1
     },
     "p_branch_b_6_weight": {
       "id": "p_branch_b_6_weight",
@@ -224,9 +169,10 @@
         32
       ],
       "kind": "weight",
-      "offset": 316544,
+      "offset": 315264,
       "bytes": 8192,
-      "producer": ""
+      "producer": "",
+      "slot": -1
     },
     "p_branch_b_6_bias": {
       "id": "p_branch_b_6_bias",
@@ -235,9 +181,10 @@
         64
       ],
       "kind": "weight",
-      "offset": 324736,
+      "offset": 323456,
       "bytes": 256,
-      "producer": ""
+      "producer": "",
+      "slot": -1
     },
     "p_head_0_weight": {
       "id": "p_head_0_weight",
@@ -247,9 +194,10 @@
         128
       ],
       "kind": "weight",
-      "offset": 324992,
+      "offset": 323712,
       "bytes": 32768,
-      "producer": ""
+      "producer": "",
+      "slot": -1
     },
     "p_head_0_bias": {
       "id": "p_head_0_bias",
@@ -258,9 +206,10 @@
         64
       ],
       "kind": "weight",
-      "offset": 357760,
+      "offset": 356480,
       "bytes": 256,
-      "producer": ""
+      "producer": "",
+      "slot": -1
     },
     "p_head_2_weight": {
       "id": "p_head_2_weight",
@@ -270,9 +219,10 @@
         64
       ],
       "kind": "weight",
-      "offset": 358016,
+      "offset": 356736,
       "bytes": 2560,
-      "producer": ""
+      "producer": "",
+      "slot": -1
     },
     "p_head_2_bias": {
       "id": "p_head_2_bias",
@@ -281,75 +231,10 @@
         10
       ],
       "kind": "weight",
-      "offset": 360576,
+      "offset": 359296,
       "bytes": 40,
-      "producer": ""
-    },
-    "b_stem_1_running_mean": {
-      "id": "b_stem_1_running_mean",
-      "dtype": "f32",
-      "shape": [
-        32
-      ],
-      "kind": "constant",
-      "offset": 360640,
-      "bytes": 128,
-      "producer": ""
-    },
-    "b_stem_1_running_var": {
-      "id": "b_stem_1_running_var",
-      "dtype": "f32",
-      "shape": [
-        32
-      ],
-      "kind": "constant",
-      "offset": 360768,
-      "bytes": 128,
-      "producer": ""
-    },
-    "b_branch_a_0_1_running_mean": {
-      "id": "b_branch_a_0_1_running_mean",
-      "dtype": "f32",
-      "shape": [
-        64
-      ],
-      "kind": "constant",
-      "offset": 360896,
-      "bytes": 256,
-      "producer": ""
-    },
-    "b_branch_a_0_1_running_var": {
-      "id": "b_branch_a_0_1_running_var",
-      "dtype": "f32",
-      "shape": [
-        64
-      ],
-      "kind": "constant",
-      "offset": 361152,
-      "bytes": 256,
-      "producer": ""
-    },
-    "b_branch_a_1_1_running_mean": {
-      "id": "b_branch_a_1_1_running_mean",
-      "dtype": "f32",
-      "shape": [
-        64
-      ],
-      "kind": "constant",
-      "offset": 361408,
-      "bytes": 256,
-      "producer": ""
-    },
-    "b_branch_a_1_1_running_var": {
-      "id": "b_branch_a_1_1_running_var",
-      "dtype": "f32",
-      "shape": [
-        64
-      ],
-      "kind": "constant",
-      "offset": 361664,
-      "bytes": 256,
-      "producer": ""
+      "producer": "",
+      "slot": -1
     },
     "x": {
       "id": "x",
@@ -363,7 +248,8 @@
       "kind": "input",
       "offset": -1,
       "bytes": 12288,
-      "producer": ""
+      "producer": "",
+      "slot": -1
     },
     "batch_norm": {
       "id": "batch_norm",
@@ -377,7 +263,8 @@
       "kind": "activation",
       "offset": -1,
       "bytes": 131072,
-      "producer": "conv2d"
+      "producer": "conv2d",
+      "slot": 0
     },
     "relu_": {
       "id": "relu_",
@@ -391,7 +278,8 @@
       "kind": "activation",
       "offset": -1,
       "bytes": 131072,
-      "producer": "relu_"
+      "producer": "relu_",
+      "slot": 1
     },
     "batch_norm_1": {
       "id": "batch_norm_1",
@@ -405,7 +293,8 @@
       "kind": "activation",
       "offset": -1,
       "bytes": 262144,
-      "producer": "conv2d_1"
+      "producer": "conv2d_1",
+      "slot": 3
     },
     "relu__1": {
       "id": "relu__1",
@@ -419,7 +308,8 @@
       "kind": "activation",
       "offset": -1,
       "bytes": 262144,
-      "producer": "relu__1"
+      "producer": "relu__1",
+      "slot": 4
     },
     "batch_norm_2": {
       "id": "batch_norm_2",
@@ -433,7 +323,8 @@
       "kind": "activation",
       "offset": -1,
       "bytes": 262144,
-      "producer": "conv2d_2"
+      "producer": "conv2d_2",
+      "slot": 3
     },
     "relu__2": {
       "id": "relu__2",
@@ -447,7 +338,8 @@
       "kind": "activation",
       "offset": -1,
       "bytes": 262144,
-      "producer": "relu__2"
+      "producer": "relu__2",
+      "slot": 4
     },
     "adaptive_avg_pool2d": {
       "id": "adaptive_avg_pool2d",
@@ -461,7 +353,8 @@
       "kind": "activation",
       "offset": -1,
       "bytes": 256,
-      "producer": "adaptive_avg_pool2d"
+      "producer": "adaptive_avg_pool2d",
+      "slot": 3
     },
     "flatten": {
       "id": "flatten",
@@ -473,7 +366,8 @@
       "kind": "activation",
       "offset": -1,
       "bytes": 256,
-      "producer": "flatten"
+      "producer": "flatten",
+      "slot": 3
     },
     "linear": {
       "id": "linear",
@@ -485,7 +379,8 @@
       "kind": "activation",
       "offset": -1,
       "bytes": 256,
-      "producer": "linear"
+      "producer": "linear",
+      "slot": 4
     },
     "relu": {
       "id": "relu",
@@ -497,7 +392,8 @@
       "kind": "activation",
       "offset": -1,
       "bytes": 256,
-      "producer": "relu"
+      "producer": "relu",
+      "slot": 3
     },
     "conv2d_3": {
       "id": "conv2d_3",
@@ -511,7 +407,8 @@
       "kind": "activation",
       "offset": -1,
       "bytes": 131072,
-      "producer": "conv2d_3"
+      "producer": "conv2d_3",
+      "slot": 0
     },
     "silu": {
       "id": "silu",
@@ -525,7 +422,8 @@
       "kind": "activation",
       "offset": -1,
       "bytes": 131072,
-      "producer": "silu"
+      "producer": "silu",
+      "slot": 2
     },
     "conv2d_4": {
       "id": "conv2d_4",
@@ -539,7 +437,8 @@
       "kind": "activation",
       "offset": -1,
       "bytes": 131072,
-      "producer": "conv2d_4"
+      "producer": "conv2d_4",
+      "slot": 0
     },
     "silu_1": {
       "id": "silu_1",
@@ -553,7 +452,8 @@
       "kind": "activation",
       "offset": -1,
       "bytes": 131072,
-      "producer": "silu_1"
+      "producer": "silu_1",
+      "slot": 2
     },
     "adaptive_avg_pool2d_1": {
       "id": "adaptive_avg_pool2d_1",
@@ -567,7 +467,8 @@
       "kind": "activation",
       "offset": -1,
       "bytes": 128,
-      "producer": "adaptive_avg_pool2d_1"
+      "producer": "adaptive_avg_pool2d_1",
+      "slot": 0
     },
     "flatten_1": {
       "id": "flatten_1",
@@ -579,7 +480,8 @@
       "kind": "activation",
       "offset": -1,
       "bytes": 128,
-      "producer": "flatten_1"
+      "producer": "flatten_1",
+      "slot": 0
     },
     "linear_1": {
       "id": "linear_1",
@@ -591,7 +493,8 @@
       "kind": "activation",
       "offset": -1,
       "bytes": 256,
-      "producer": "linear_1"
+      "producer": "linear_1",
+      "slot": 2
     },
     "silu_2": {
       "id": "silu_2",
@@ -603,7 +506,8 @@
       "kind": "activation",
       "offset": -1,
       "bytes": 256,
-      "producer": "silu_2"
+      "producer": "silu_2",
+      "slot": 0
     },
     "cat": {
       "id": "cat",
@@ -615,7 +519,8 @@
       "kind": "activation",
       "offset": -1,
       "bytes": 512,
-      "producer": "cat"
+      "producer": "cat",
+      "slot": 1
     },
     "linear_2": {
       "id": "linear_2",
@@ -627,7 +532,8 @@
       "kind": "activation",
       "offset": -1,
       "bytes": 256,
-      "producer": "linear_2"
+      "producer": "linear_2",
+      "slot": 0
     },
     "gelu": {
       "id": "gelu",
@@ -639,7 +545,8 @@
       "kind": "activation",
       "offset": -1,
       "bytes": 256,
-      "producer": "gelu"
+      "producer": "gelu",
+      "slot": 1
     },
     "linear_3": {
       "id": "linear_3",
@@ -651,7 +558,8 @@
       "kind": "activation",
       "offset": -1,
       "bytes": 40,
-      "producer": "linear_3"
+      "producer": "linear_3",
+      "slot": 0
     },
     "sigmoid": {
       "id": "sigmoid",
@@ -663,7 +571,8 @@
       "kind": "output",
       "offset": -1,
       "bytes": 40,
-      "producer": "sigmoid"
+      "producer": "sigmoid",
+      "slot": -1
     },
     "conv2d_bias": {
       "id": "conv2d_bias",
@@ -672,9 +581,10 @@
         32
       ],
       "kind": "bias",
-      "offset": 361920,
+      "offset": 359360,
       "bytes": 128,
-      "producer": ""
+      "producer": "",
+      "slot": -1
     },
     "conv2d_1_bias": {
       "id": "conv2d_1_bias",
@@ -683,9 +593,10 @@
         64
       ],
       "kind": "bias",
-      "offset": 362048,
+      "offset": 359488,
       "bytes": 256,
-      "producer": ""
+      "producer": "",
+      "slot": -1
     },
     "conv2d_2_bias": {
       "id": "conv2d_2_bias",
@@ -694,9 +605,10 @@
         64
       ],
       "kind": "bias",
-      "offset": 362304,
+      "offset": 359744,
       "bytes": 256,
-      "producer": ""
+      "producer": "",
+      "slot": -1
     }
   },
   "nodes": [
@@ -727,6 +639,7 @@
         "groups": 1
       },
       "flops": 1802240,
+      "io_bytes": 146944,
       "part": 0,
       "backend": "gpu",
       "name": "conv2d"
@@ -742,6 +655,7 @@
       ],
       "attrs": {},
       "flops": 65536,
+      "io_bytes": 262144,
       "part": 0,
       "backend": "gpu",
       "name": "relu_"
@@ -773,6 +687,7 @@
         "groups": 1
       },
       "flops": 37814272,
+      "io_bytes": 467200,
       "part": 2,
       "backend": "gpu",
       "name": "conv2d_1",
@@ -789,6 +704,7 @@
       ],
       "attrs": {},
       "flops": 131072,
+      "io_bytes": 524288,
       "part": 2,
       "backend": "gpu",
       "name": "relu__1",
@@ -821,6 +737,7 @@
         "groups": 1
       },
       "flops": 75563008,
+      "io_bytes": 672000,
       "part": 2,
       "backend": "gpu",
       "name": "conv2d_2",
@@ -837,6 +754,7 @@
       ],
       "attrs": {},
       "flops": 131072,
+      "io_bytes": 524288,
       "part": 2,
       "backend": "gpu",
       "name": "relu__2",
@@ -853,6 +771,7 @@
       ],
       "attrs": {},
       "flops": 131072,
+      "io_bytes": 262400,
       "part": 2,
       "backend": "gpu",
       "name": "adaptive_avg_pool2d",
@@ -871,6 +790,7 @@
         "start_dim": 1
       },
       "flops": 0,
+      "io_bytes": 512,
       "part": 2,
       "backend": "gpu",
       "name": "flatten",
@@ -889,6 +809,7 @@
       ],
       "attrs": {},
       "flops": 8256,
+      "io_bytes": 17152,
       "part": 2,
       "backend": "gpu",
       "name": "linear",
@@ -905,6 +826,7 @@
       ],
       "attrs": {},
       "flops": 128,
+      "io_bytes": 512,
       "part": 2,
       "backend": "gpu",
       "name": "relu",
@@ -937,6 +859,7 @@
         "groups": 1
       },
       "flops": 18907136,
+      "io_bytes": 299136,
       "part": 0,
       "backend": "gpu",
       "name": "conv2d_3",
@@ -953,6 +876,7 @@
       ],
       "attrs": {},
       "flops": 196608,
+      "io_bytes": 262144,
       "part": 0,
       "backend": "gpu",
       "name": "silu",
@@ -985,6 +909,7 @@
         "groups": 1
       },
       "flops": 18907136,
+      "io_bytes": 299136,
       "part": 0,
       "backend": "gpu",
       "name": "conv2d_4",
@@ -1001,6 +926,7 @@
       ],
       "attrs": {},
       "flops": 196608,
+      "io_bytes": 262144,
       "part": 0,
       "backend": "gpu",
       "name": "silu_1",
@@ -1017,8 +943,9 @@
       ],
       "attrs": {},
       "flops": 65536,
-      "part": 0,
-      "backend": "gpu",
+      "io_bytes": 131200,
+      "part": 1,
+      "backend": "cpu",
       "name": "adaptive_avg_pool2d_1",
       "hint": "gpu"
     },
@@ -1035,8 +962,9 @@
         "start_dim": 1
       },
       "flops": 0,
-      "part": 0,
-      "backend": "gpu",
+      "io_bytes": 256,
+      "part": 1,
+      "backend": "cpu",
       "name": "flatten_1",
       "hint": "gpu"
     },
@@ -1053,6 +981,7 @@
       ],
       "attrs": {},
       "flops": 4160,
+      "io_bytes": 8832,
       "part": 1,
       "backend": "cpu",
       "name": "linear_1",
@@ -1069,6 +998,7 @@
       ],
       "attrs": {},
       "flops": 384,
+      "io_bytes": 512,
       "part": 1,
       "backend": "cpu",
       "name": "silu_2",
@@ -1088,6 +1018,7 @@
         "dim": 1
       },
       "flops": 0,
+      "io_bytes": 1024,
       "part": 3,
       "backend": "cpu",
       "name": "cat",
@@ -1106,6 +1037,7 @@
       ],
       "attrs": {},
       "flops": 16448,
+      "io_bytes": 33792,
       "part": 3,
       "backend": "cpu",
       "name": "linear_2",
@@ -1122,6 +1054,7 @@
       ],
       "attrs": {},
       "flops": 384,
+      "io_bytes": 512,
       "part": 3,
       "backend": "cpu",
       "name": "gelu",
@@ -1140,6 +1073,7 @@
       ],
       "attrs": {},
       "flops": 1290,
+      "io_bytes": 2896,
       "part": 3,
       "backend": "cpu",
       "name": "linear_3",
@@ -1156,6 +1090,7 @@
       ],
       "attrs": {},
       "flops": 60,
+      "io_bytes": 80,
       "part": 3,
       "backend": "cpu",
       "name": "sigmoid",
@@ -1172,18 +1107,16 @@
         "conv2d_3",
         "silu",
         "conv2d_4",
-        "silu_1",
-        "adaptive_avg_pool2d_1",
-        "flatten_1"
+        "silu_1"
       ],
       "inputs": [
         "x"
       ],
       "outputs": [
         "relu_",
-        "flatten_1"
+        "silu_1"
       ],
-      "est_us": 66.097,
+      "est_us": 75.378,
       "artifact": "",
       "compile_flags": {
         "target": "gpu"
@@ -1193,16 +1126,18 @@
       "id": 1,
       "backend": "cpu",
       "nodes": [
+        "adaptive_avg_pool2d_1",
+        "flatten_1",
         "linear_1",
         "silu_2"
       ],
       "inputs": [
-        "flatten_1"
+        "silu_1"
       ],
       "outputs": [
         "silu_2"
       ],
-      "est_us": 12.052,
+      "est_us": 17.632,
       "artifact": "",
       "compile_flags": {
         "target": "cpu"
@@ -1227,7 +1162,7 @@
       "outputs": [
         "relu"
       ],
-      "est_us": 105.098,
+      "est_us": 119.756,
       "artifact": "",
       "compile_flags": {
         "target": "gpu"
@@ -1250,7 +1185,7 @@
       "outputs": [
         "sigmoid"
       ],
-      "est_us": 12.207,
+      "est_us": 13.532,
       "artifact": "",
       "compile_flags": {
         "target": "cpu"
@@ -1261,11 +1196,11 @@
     {
       "src": 0,
       "dst": 1,
-      "tensor": "flatten_1",
+      "tensor": "silu_1",
       "src_backend": "gpu",
       "dst_backend": "cpu",
-      "bytes": 128,
-      "cost_us": 55.002,
+      "bytes": 131072,
+      "cost_us": 57.359,
       "cross": true,
       "zero_copy": true
     },
@@ -1304,10 +1239,10 @@
     }
   ],
   "weights_file": "weights.bin",
-  "weights_bytes": 362560,
+  "weights_bytes": 360000,
   "plan": {
     "verdict": "NOT_RECOMMENDED",
-    "reason": "模拟加速比 0.43× < 1：跨片搬运/同步/提交开销超过了并行收益。建议减少分区数或改用单一后端。",
+    "reason": "模拟加速比 0.57× < 1：跨片搬运/同步/提交开销超过了并行收益。建议减少分区数或改用单一后端。",
     "objective": {
       "latency": true,
       "throughput": true
@@ -1337,48 +1272,50 @@
       }
     },
     "baselines_single_backend_us": {
-      "cpu": 1761.35,
-      "gpu": 126.2,
-      "npu": 1031.54
+      "cpu": 1842.35,
+      "gpu": 152.12,
+      "npu": 1049.57
     },
     "naive_sequential_baselines_us": {
-      "cpu": 1761.35,
-      "gpu": 126.2,
-      "npu": 406.19
+      "cpu": 1842.35,
+      "gpu": 152.12,
+      "npu": 435.02
     },
     "best_single_backend": "gpu",
     "_baseline_note": "基线为单后端方案的离散事件模拟（含其自身的降级搬运），与分区方案可比",
     "bound": {
-      "baseline_single_backend_us": 126.2,
-      "naive_sequential_baseline_us": 406.19,
+      "baseline_single_backend_us": 152.12,
+      "naive_sequential_baseline_us": 435.02,
       "baseline_is_fair_simulation": true,
-      "partitioned_latency_us": 296.41,
-      "latency_speedup": 0.4258,
-      "total_serial_compute_us": 195.45,
-      "T1_serial_partitioned_us": 311.46,
-      "Tinf_critical_path_us": 241.41,
-      "theoretical_upper_bound_vs_baseline": 0.5228,
-      "intrinsic_parallelism_T1_over_Tinf": 1.2902,
-      "parallel_efficiency": 0.5254,
-      "transfer_overhead_ratio": 0.3725
+      "partitioned_latency_us": 266.67,
+      "latency_speedup": 0.5705,
+      "total_serial_compute_us": 226.3,
+      "T1_serial_partitioned_us": 344.66,
+      "Tinf_critical_path_us": 266.67,
+      "theoretical_upper_bound_vs_baseline": 0.5705,
+      "intrinsic_parallelism_T1_over_Tinf": 1.2925,
+      "parallel_efficiency": 0.6462,
+      "transfer_overhead_ratio": 0.3434
     },
     "simulation": {
-      "makespan_us": 296.41,
-      "steady_frame_us": 171.2,
-      "throughput_fps": 5841.29,
-      "total_compute_us": 81.45,
-      "total_transfer_us": 116.01,
+      "makespan_us": 266.67,
+      "steady_frame_us": 195.13,
+      "throughput_fps": 5124.66,
+      "total_compute_us": 112.3,
+      "total_transfer_us": 118.36,
+      "dma_busy_us": 112.36,
+      "transfer_edges": 2,
       "total_launch_us": 114.0,
-      "critical_path_us": 241.41,
+      "critical_path_us": 266.67,
       "overlap_pairs": 1,
       "backend_busy_us": {
-        "cpu": 24.26,
-        "gpu": 171.2,
+        "cpu": 31.16,
+        "gpu": 195.13,
         "npu": 0.0
       },
       "utilization": {
-        "cpu": 0.0818,
-        "gpu": 0.5776,
+        "cpu": 0.1169,
+        "gpu": 0.7317,
         "npu": 0.0
       }
     },
@@ -1391,26 +1328,219 @@
     "pipeline": {
       "pipeline_depth": 3,
       "bottleneck_backend": "gpu",
-      "steady_frame_us": 171.2,
-      "steady_fps": 5841.29,
-      "single_frame_latency_us": 296.41,
-      "no_pipeline_fps": 3373.72,
-      "ideal_balanced_fps": 15348.94,
+      "steady_frame_us": 195.13,
+      "steady_fps": 5124.66,
+      "single_frame_latency_us": 266.67,
+      "no_pipeline_fps": 3749.93,
+      "ideal_balanced_fps": 13256.8,
       "note": "跨帧流水让不同帧占用不同后端，提高吞吐但不降低单帧延迟"
     },
+    "memory": {
+      "align": 64,
+      "slot_count": 5,
+      "reusable_tensors": 20,
+      "persistent_tensors": 20,
+      "alias_tensors": [
+        "flatten",
+        "flatten_1"
+      ],
+      "alias_count": 2,
+      "naive_activation_bytes": 1837504,
+      "peak_activation_bytes": 917504,
+      "activation_saving_ratio": 0.5007,
+      "weights_bytes": 359976,
+      "io_persistent_bytes": 12352,
+      "naive_total_bytes": 2209832,
+      "peak_total_bytes": 1289832,
+      "slots": [
+        {
+          "id": 0,
+          "bytes": 131072,
+          "tensors": [
+            "batch_norm",
+            "conv2d_3",
+            "conv2d_4",
+            "adaptive_avg_pool2d_1",
+            "silu_2",
+            "linear_2",
+            "linear_3"
+          ]
+        },
+        {
+          "id": 1,
+          "bytes": 131072,
+          "tensors": [
+            "relu_",
+            "cat",
+            "gelu"
+          ]
+        },
+        {
+          "id": 2,
+          "bytes": 131072,
+          "tensors": [
+            "silu",
+            "silu_1",
+            "linear_1"
+          ]
+        },
+        {
+          "id": 3,
+          "bytes": 262144,
+          "tensors": [
+            "batch_norm_1",
+            "batch_norm_2",
+            "adaptive_avg_pool2d",
+            "relu"
+          ]
+        },
+        {
+          "id": 4,
+          "bytes": 262144,
+          "tensors": [
+            "relu__1",
+            "relu__2",
+            "linear"
+          ]
+        }
+      ],
+      "tensor_slots": {
+        "batch_norm": 0,
+        "relu_": 1,
+        "conv2d_3": 0,
+        "silu": 2,
+        "conv2d_4": 0,
+        "silu_1": 2,
+        "adaptive_avg_pool2d_1": 0,
+        "linear_1": 2,
+        "silu_2": 0,
+        "batch_norm_1": 3,
+        "relu__1": 4,
+        "batch_norm_2": 3,
+        "relu__2": 4,
+        "adaptive_avg_pool2d": 3,
+        "linear": 4,
+        "relu": 3,
+        "cat": 1,
+        "linear_2": 0,
+        "gelu": 1,
+        "linear_3": 0,
+        "flatten": 3,
+        "flatten_1": 0
+      },
+      "_note": "复用条件基于依赖偏序（祖先集），在并行分支上同样安全；view 类算子为零拷贝别名，与其根张量共槽、不单独占缓冲，故 naive 只统计需要独立缓冲的张量；多帧流水时每帧独立一套 slot 池，峰值需乘以在飞帧数。",
+      "verified": true
+    },
     "cost_breakdown": {
-      "compute_us": 81.45,
-      "transfer_us": 116.01,
+      "compute_us": 112.3,
+      "transfer_us": 118.36,
+      "dma_busy_us": 112.36,
       "launch_us": 114.0,
-      "resource_idle_us": 55.0
+      "resource_idle_us": 0.0
     },
     "constraints": {
       "cross_backend_edges": 2,
-      "boundary_bytes": 384,
+      "boundary_bytes": 131328,
       "max_part_count": 4,
       "per_backend_serial": true,
       "thermal_note": "持续满载 2~3 分钟后 SoC 可能降频（文献实测最高 4.3× 衰减），运行时需启用热感知调度与动态降级"
     }
+  },
+  "memory": {
+    "align": 64,
+    "slot_count": 5,
+    "reusable_tensors": 20,
+    "persistent_tensors": 20,
+    "alias_tensors": [
+      "flatten",
+      "flatten_1"
+    ],
+    "alias_count": 2,
+    "naive_activation_bytes": 1837504,
+    "peak_activation_bytes": 917504,
+    "activation_saving_ratio": 0.5007,
+    "weights_bytes": 359976,
+    "io_persistent_bytes": 12352,
+    "naive_total_bytes": 2209832,
+    "peak_total_bytes": 1289832,
+    "slots": [
+      {
+        "id": 0,
+        "bytes": 131072,
+        "tensors": [
+          "batch_norm",
+          "conv2d_3",
+          "conv2d_4",
+          "adaptive_avg_pool2d_1",
+          "silu_2",
+          "linear_2",
+          "linear_3"
+        ]
+      },
+      {
+        "id": 1,
+        "bytes": 131072,
+        "tensors": [
+          "relu_",
+          "cat",
+          "gelu"
+        ]
+      },
+      {
+        "id": 2,
+        "bytes": 131072,
+        "tensors": [
+          "silu",
+          "silu_1",
+          "linear_1"
+        ]
+      },
+      {
+        "id": 3,
+        "bytes": 262144,
+        "tensors": [
+          "batch_norm_1",
+          "batch_norm_2",
+          "adaptive_avg_pool2d",
+          "relu"
+        ]
+      },
+      {
+        "id": 4,
+        "bytes": 262144,
+        "tensors": [
+          "relu__1",
+          "relu__2",
+          "linear"
+        ]
+      }
+    ],
+    "tensor_slots": {
+      "batch_norm": 0,
+      "relu_": 1,
+      "conv2d_3": 0,
+      "silu": 2,
+      "conv2d_4": 0,
+      "silu_1": 2,
+      "adaptive_avg_pool2d_1": 0,
+      "linear_1": 2,
+      "silu_2": 0,
+      "batch_norm_1": 3,
+      "relu__1": 4,
+      "batch_norm_2": 3,
+      "relu__2": 4,
+      "adaptive_avg_pool2d": 3,
+      "linear": 4,
+      "relu": 3,
+      "cat": 1,
+      "linear_2": 0,
+      "gelu": 1,
+      "linear_3": 0,
+      "flatten": 3,
+      "flatten_1": 0
+    },
+    "_note": "复用条件基于依赖偏序（祖先集），在并行分支上同样安全；view 类算子为零拷贝别名，与其根张量共槽、不单独占缓冲，故 naive 只统计需要独立缓冲的张量；多帧流水时每帧独立一套 slot 池，峰值需乘以在飞帧数。",
+    "verified": true
   },
   "chip": {
     "name": "Balanced-demo (GPU/NPU comparable)",
@@ -1418,17 +1548,23 @@
       "cpu": {
         "peak_gflops": 160.0,
         "launch_us": 12.0,
-        "layout": "NCHW"
+        "layout": "NCHW",
+        "mem_bw_gbps": 25.0,
+        "slots": 1
       },
       "gpu": {
         "peak_gflops": 4200.0,
         "launch_us": 45.0,
-        "layout": "NHWC"
+        "layout": "NHWC",
+        "mem_bw_gbps": 90.0,
+        "slots": 1
       },
       "npu": {
         "peak_gflops": 6000.0,
         "launch_us": 90.0,
-        "layout": "NHWC"
+        "layout": "NHWC",
+        "mem_bw_gbps": 150.0,
+        "slots": 1
       }
     },
     "fixed_cross_us": 35.0,
@@ -1448,14 +1584,8 @@
   "meta": {
     "weights": [
       "p_stem_0_weight",
-      "p_stem_1_weight",
-      "p_stem_1_bias",
       "p_branch_a_0_0_weight",
-      "p_branch_a_0_1_weight",
-      "p_branch_a_0_1_bias",
       "p_branch_a_1_0_weight",
-      "p_branch_a_1_1_weight",
-      "p_branch_a_1_1_bias",
       "p_branch_a_4_weight",
       "p_branch_a_4_bias",
       "p_branch_b_0_weight",
@@ -1468,20 +1598,14 @@
       "p_head_0_bias",
       "p_head_2_weight",
       "p_head_2_bias",
-      "b_stem_1_running_mean",
-      "b_stem_1_running_var",
-      "b_branch_a_0_1_running_mean",
-      "b_branch_a_0_1_running_var",
-      "b_branch_a_1_1_running_mean",
-      "b_branch_a_1_1_running_var",
       "conv2d_bias",
       "conv2d_1_bias",
       "conv2d_2_bias"
     ],
     "capture": {
       "producer": "hx-capture",
-      "captured_at": "2026-11-05 00:15:34",
-      "capture_ms": 242.79,
+      "captured_at": "2026-11-05 23:41:08",
+      "capture_ms": 287.58,
       "torch_version": "2.10.0+cu128",
       "dynamic_shapes_declared": false,
       "marker_count": 2,
@@ -1519,7 +1643,8 @@
       "hints": 2,
       "bn_folded": 3,
       "identity_removed": 0,
-      "silu_decomposed": 0
+      "silu_decomposed": 0,
+      "orphan_weights_removed": 12
     },
     "hard_boundaries": [],
     "hints": {
@@ -1534,17 +1659,17 @@
     "partition": {
       "strategy": "force_hetero",
       "search": {
-        "initial_us": 20888.59,
-        "final_us": 296.41,
-        "improvement_pct": 98.58,
-        "iterations": 1590,
-        "accepted_moves": 675
+        "initial_us": 20907.24,
+        "final_us": 266.67,
+        "improvement_pct": 98.72,
+        "iterations": 1420,
+        "accepted_moves": 494
       },
       "demoted_nodes": 0,
       "small_npu_parts": 0,
       "part_count": 4,
       "cross_backend_edges": 2,
-      "total_boundary_bytes": 384,
+      "total_boundary_bytes": 131328,
       "assignment": {
         "conv2d": "gpu",
         "relu_": "gpu",
@@ -1560,8 +1685,8 @@
         "silu": "gpu",
         "conv2d_4": "gpu",
         "silu_1": "gpu",
-        "adaptive_avg_pool2d_1": "gpu",
-        "flatten_1": "gpu",
+        "adaptive_avg_pool2d_1": "cpu",
+        "flatten_1": "cpu",
         "linear_1": "cpu",
         "silu_2": "cpu",
         "cat": "cpu",
@@ -1571,9 +1696,105 @@
         "sigmoid": "cpu"
       }
     },
+    "memory": {
+      "align": 64,
+      "slot_count": 5,
+      "reusable_tensors": 20,
+      "persistent_tensors": 20,
+      "alias_tensors": [
+        "flatten",
+        "flatten_1"
+      ],
+      "alias_count": 2,
+      "naive_activation_bytes": 1837504,
+      "peak_activation_bytes": 917504,
+      "activation_saving_ratio": 0.5007,
+      "weights_bytes": 359976,
+      "io_persistent_bytes": 12352,
+      "naive_total_bytes": 2209832,
+      "peak_total_bytes": 1289832,
+      "slots": [
+        {
+          "id": 0,
+          "bytes": 131072,
+          "tensors": [
+            "batch_norm",
+            "conv2d_3",
+            "conv2d_4",
+            "adaptive_avg_pool2d_1",
+            "silu_2",
+            "linear_2",
+            "linear_3"
+          ]
+        },
+        {
+          "id": 1,
+          "bytes": 131072,
+          "tensors": [
+            "relu_",
+            "cat",
+            "gelu"
+          ]
+        },
+        {
+          "id": 2,
+          "bytes": 131072,
+          "tensors": [
+            "silu",
+            "silu_1",
+            "linear_1"
+          ]
+        },
+        {
+          "id": 3,
+          "bytes": 262144,
+          "tensors": [
+            "batch_norm_1",
+            "batch_norm_2",
+            "adaptive_avg_pool2d",
+            "relu"
+          ]
+        },
+        {
+          "id": 4,
+          "bytes": 262144,
+          "tensors": [
+            "relu__1",
+            "relu__2",
+            "linear"
+          ]
+        }
+      ],
+      "tensor_slots": {
+        "batch_norm": 0,
+        "relu_": 1,
+        "conv2d_3": 0,
+        "silu": 2,
+        "conv2d_4": 0,
+        "silu_1": 2,
+        "adaptive_avg_pool2d_1": 0,
+        "linear_1": 2,
+        "silu_2": 0,
+        "batch_norm_1": 3,
+        "relu__1": 4,
+        "batch_norm_2": 3,
+        "relu__2": 4,
+        "adaptive_avg_pool2d": 3,
+        "linear": 4,
+        "relu": 3,
+        "cat": 1,
+        "linear_2": 0,
+        "gelu": 1,
+        "linear_3": 0,
+        "flatten": 3,
+        "flatten_1": 0
+      },
+      "_note": "复用条件基于依赖偏序（祖先集），在并行分支上同样安全；view 类算子为零拷贝别名，与其根张量共槽、不单独占缓冲，故 naive 只统计需要独立缓冲的张量；多帧流水时每帧独立一套 slot 池，峰值需乘以在飞帧数。",
+      "verified": true
+    },
     "plan": {
       "verdict": "NOT_RECOMMENDED",
-      "reason": "模拟加速比 0.43× < 1：跨片搬运/同步/提交开销超过了并行收益。建议减少分区数或改用单一后端。",
+      "reason": "模拟加速比 0.57× < 1：跨片搬运/同步/提交开销超过了并行收益。建议减少分区数或改用单一后端。",
       "objective": {
         "latency": true,
         "throughput": true
@@ -1603,48 +1824,50 @@
         }
       },
       "baselines_single_backend_us": {
-        "cpu": 1761.35,
-        "gpu": 126.2,
-        "npu": 1031.54
+        "cpu": 1842.35,
+        "gpu": 152.12,
+        "npu": 1049.57
       },
       "naive_sequential_baselines_us": {
-        "cpu": 1761.35,
-        "gpu": 126.2,
-        "npu": 406.19
+        "cpu": 1842.35,
+        "gpu": 152.12,
+        "npu": 435.02
       },
       "best_single_backend": "gpu",
       "_baseline_note": "基线为单后端方案的离散事件模拟（含其自身的降级搬运），与分区方案可比",
       "bound": {
-        "baseline_single_backend_us": 126.2,
-        "naive_sequential_baseline_us": 406.19,
+        "baseline_single_backend_us": 152.12,
+        "naive_sequential_baseline_us": 435.02,
         "baseline_is_fair_simulation": true,
-        "partitioned_latency_us": 296.41,
-        "latency_speedup": 0.4258,
-        "total_serial_compute_us": 195.45,
-        "T1_serial_partitioned_us": 311.46,
-        "Tinf_critical_path_us": 241.41,
-        "theoretical_upper_bound_vs_baseline": 0.5228,
-        "intrinsic_parallelism_T1_over_Tinf": 1.2902,
-        "parallel_efficiency": 0.5254,
-        "transfer_overhead_ratio": 0.3725
+        "partitioned_latency_us": 266.67,
+        "latency_speedup": 0.5705,
+        "total_serial_compute_us": 226.3,
+        "T1_serial_partitioned_us": 344.66,
+        "Tinf_critical_path_us": 266.67,
+        "theoretical_upper_bound_vs_baseline": 0.5705,
+        "intrinsic_parallelism_T1_over_Tinf": 1.2925,
+        "parallel_efficiency": 0.6462,
+        "transfer_overhead_ratio": 0.3434
       },
       "simulation": {
-        "makespan_us": 296.41,
-        "steady_frame_us": 171.2,
-        "throughput_fps": 5841.29,
-        "total_compute_us": 81.45,
-        "total_transfer_us": 116.01,
+        "makespan_us": 266.67,
+        "steady_frame_us": 195.13,
+        "throughput_fps": 5124.66,
+        "total_compute_us": 112.3,
+        "total_transfer_us": 118.36,
+        "dma_busy_us": 112.36,
+        "transfer_edges": 2,
         "total_launch_us": 114.0,
-        "critical_path_us": 241.41,
+        "critical_path_us": 266.67,
         "overlap_pairs": 1,
         "backend_busy_us": {
-          "cpu": 24.26,
-          "gpu": 171.2,
+          "cpu": 31.16,
+          "gpu": 195.13,
           "npu": 0.0
         },
         "utilization": {
-          "cpu": 0.0818,
-          "gpu": 0.5776,
+          "cpu": 0.1169,
+          "gpu": 0.7317,
           "npu": 0.0
         }
       },
@@ -1657,22 +1880,119 @@
       "pipeline": {
         "pipeline_depth": 3,
         "bottleneck_backend": "gpu",
-        "steady_frame_us": 171.2,
-        "steady_fps": 5841.29,
-        "single_frame_latency_us": 296.41,
-        "no_pipeline_fps": 3373.72,
-        "ideal_balanced_fps": 15348.94,
+        "steady_frame_us": 195.13,
+        "steady_fps": 5124.66,
+        "single_frame_latency_us": 266.67,
+        "no_pipeline_fps": 3749.93,
+        "ideal_balanced_fps": 13256.8,
         "note": "跨帧流水让不同帧占用不同后端，提高吞吐但不降低单帧延迟"
       },
+      "memory": {
+        "align": 64,
+        "slot_count": 5,
+        "reusable_tensors": 20,
+        "persistent_tensors": 20,
+        "alias_tensors": [
+          "flatten",
+          "flatten_1"
+        ],
+        "alias_count": 2,
+        "naive_activation_bytes": 1837504,
+        "peak_activation_bytes": 917504,
+        "activation_saving_ratio": 0.5007,
+        "weights_bytes": 359976,
+        "io_persistent_bytes": 12352,
+        "naive_total_bytes": 2209832,
+        "peak_total_bytes": 1289832,
+        "slots": [
+          {
+            "id": 0,
+            "bytes": 131072,
+            "tensors": [
+              "batch_norm",
+              "conv2d_3",
+              "conv2d_4",
+              "adaptive_avg_pool2d_1",
+              "silu_2",
+              "linear_2",
+              "linear_3"
+            ]
+          },
+          {
+            "id": 1,
+            "bytes": 131072,
+            "tensors": [
+              "relu_",
+              "cat",
+              "gelu"
+            ]
+          },
+          {
+            "id": 2,
+            "bytes": 131072,
+            "tensors": [
+              "silu",
+              "silu_1",
+              "linear_1"
+            ]
+          },
+          {
+            "id": 3,
+            "bytes": 262144,
+            "tensors": [
+              "batch_norm_1",
+              "batch_norm_2",
+              "adaptive_avg_pool2d",
+              "relu"
+            ]
+          },
+          {
+            "id": 4,
+            "bytes": 262144,
+            "tensors": [
+              "relu__1",
+              "relu__2",
+              "linear"
+            ]
+          }
+        ],
+        "tensor_slots": {
+          "batch_norm": 0,
+          "relu_": 1,
+          "conv2d_3": 0,
+          "silu": 2,
+          "conv2d_4": 0,
+          "silu_1": 2,
+          "adaptive_avg_pool2d_1": 0,
+          "linear_1": 2,
+          "silu_2": 0,
+          "batch_norm_1": 3,
+          "relu__1": 4,
+          "batch_norm_2": 3,
+          "relu__2": 4,
+          "adaptive_avg_pool2d": 3,
+          "linear": 4,
+          "relu": 3,
+          "cat": 1,
+          "linear_2": 0,
+          "gelu": 1,
+          "linear_3": 0,
+          "flatten": 3,
+          "flatten_1": 0
+        },
+        "_note": "复用条件基于依赖偏序（祖先集），在并行分支上同样安全；view 类算子为零拷贝别名，与其根张量共槽、不单独占缓冲，故 naive 只统计需要独立缓冲的张量；多帧流水时每帧独立一套 slot 池，峰值需乘以在飞帧数。",
+        "verified": true
+      },
       "cost_breakdown": {
-        "compute_us": 81.45,
-        "transfer_us": 116.01,
+        "compute_us": 112.3,
+        "transfer_us": 118.36,
+        "dma_busy_us": 112.36,
         "launch_us": 114.0,
-        "resource_idle_us": 55.0
+        "resource_idle_us": 0.0
       },
       "constraints": {
         "cross_backend_edges": 2,
-        "boundary_bytes": 384,
+        "boundary_bytes": 131328,
         "max_part_count": 4,
         "per_backend_serial": true,
         "thermal_note": "持续满载 2~3 分钟后 SoC 可能降频（文献实测最高 4.3× 衰减），运行时需启用热感知调度与动态降级"
@@ -1684,17 +2004,23 @@
         "cpu": {
           "peak_gflops": 160.0,
           "launch_us": 12.0,
-          "layout": "NCHW"
+          "layout": "NCHW",
+          "mem_bw_gbps": 25.0,
+          "slots": 1
         },
         "gpu": {
           "peak_gflops": 4200.0,
           "launch_us": 45.0,
-          "layout": "NHWC"
+          "layout": "NHWC",
+          "mem_bw_gbps": 90.0,
+          "slots": 1
         },
         "npu": {
           "peak_gflops": 6000.0,
           "launch_us": 90.0,
-          "layout": "NHWC"
+          "layout": "NHWC",
+          "mem_bw_gbps": 150.0,
+          "slots": 1
         }
       },
       "fixed_cross_us": 35.0,
@@ -1712,7 +2038,7 @@
       "_note": "用于并行分支研究的『均衡型』芯片档案：GPU 与 NPU 有效吞吐接近。真实项目必须用 OEM 上板 profiling 数据回填，本文件只是演示收益临界条件的模板。"
     },
     "strategy": "force_hetero",
-    "weights_bytes": 362560,
+    "weights_bytes": 360000,
     "weights_file": "weights.bin"
   }
 }

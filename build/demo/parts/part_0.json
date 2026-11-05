@@ -14,7 +14,7 @@
       "relu_",
       "conv2d_3"
     ],
-    "est_us": 115.96,
+    "est_us": 137.988,
     "artifact": "",
     "compile_flags": {
       "target": "npu"
@@ -48,6 +48,7 @@
         "groups": 1
       },
       "flops": 16220160,
+      "io_bytes": 1293824,
       "part": 0,
       "backend": "npu",
       "name": "conv2d"
@@ -63,6 +64,7 @@
       ],
       "attrs": {},
       "flops": 589824,
+      "io_bytes": 2359296,
       "part": 0,
       "backend": "npu",
       "name": "relu_"
@@ -94,6 +96,7 @@
         "groups": 1
       },
       "flops": 170164224,
+      "io_bytes": 2396288,
       "part": 0,
       "backend": "npu",
       "name": "conv2d_3",
@@ -113,7 +116,8 @@
       "kind": "input",
       "offset": -1,
       "bytes": 110592,
-      "producer": ""
+      "producer": "",
+      "slot": -1
     },
     "p_stem_0_weight": {
       "id": "p_stem_0_weight",
@@ -127,7 +131,8 @@
       "kind": "weight",
       "offset": 0,
       "bytes": 3456,
-      "producer": ""
+      "producer": "",
+      "slot": -1
     },
     "conv2d_bias": {
       "id": "conv2d_bias",
@@ -136,9 +141,10 @@
         32
       ],
       "kind": "bias",
-      "offset": 361920,
+      "offset": 359360,
       "bytes": 128,
-      "producer": ""
+      "producer": "",
+      "slot": -1
     },
     "batch_norm": {
       "id": "batch_norm",
@@ -152,7 +158,8 @@
       "kind": "activation",
       "offset": -1,
       "bytes": 1179648,
-      "producer": "conv2d"
+      "producer": "conv2d",
+      "slot": 0
     },
     "relu_": {
       "id": "relu_",
@@ -166,7 +173,8 @@
       "kind": "activation",
       "offset": -1,
       "bytes": 1179648,
-      "producer": "relu_"
+      "producer": "relu_",
+      "slot": 1
     },
     "p_branch_b_0_weight": {
       "id": "p_branch_b_0_weight",
@@ -178,9 +186,10 @@
         3
       ],
       "kind": "weight",
-      "offset": 242560,
+      "offset": 241280,
       "bytes": 36864,
-      "producer": ""
+      "producer": "",
+      "slot": -1
     },
     "p_branch_b_0_bias": {
       "id": "p_branch_b_0_bias",
@@ -189,9 +198,10 @@
         32
       ],
       "kind": "weight",
-      "offset": 279424,
+      "offset": 278144,
       "bytes": 128,
-      "producer": ""
+      "producer": "",
+      "slot": -1
     },
     "conv2d_3": {
       "id": "conv2d_3",
@@ -205,7 +215,8 @@
       "kind": "activation",
       "offset": -1,
       "bytes": 1179648,
-      "producer": "conv2d_3"
+      "producer": "conv2d_3",
+      "slot": 0
     }
   },
   "target": "npu",

@@ -72,7 +72,9 @@ def pipeline_analysis(g: Graph, res: SimResult, depth: int) -> dict[str, Any]:
     """跨帧流水分析：延迟不降时，吞吐仍可能提升。"""
     per_backend = res.backend_busy_us
     bottleneck = max(per_backend, key=per_backend.get) if per_backend else "cpu"
-    steady = max(per_backend.values()) if per_backend else res.makespan_us
+    # 稳态帧间隔由最忙的**所有**串行资源决定，DMA 也可能是瓶颈
+    steady = res.steady_frame_us or (max(per_backend.values()) if per_backend
+                                     else res.makespan_us)
     seq_single = res.total_compute_us + res.total_launch_us
     ideal_pipeline = seq_single / len(BACKENDS)
     return {
@@ -138,9 +140,11 @@ def make_plan(g: Graph, cm: CostModel, *, pipeline_depth: int = 2) -> dict[str, 
                     "而非不同芯片同时执行；两者必须分开评估",
         },
         "pipeline": pipe,
+        "memory": g.meta.get("memory", {}),
         "cost_breakdown": {
             "compute_us": round(res.total_compute_us, 2),
             "transfer_us": round(res.total_transfer_us, 2),
+            "dma_busy_us": round(res.dma_busy_us, 2),
             "launch_us": round(res.total_launch_us, 2),
             "resource_idle_us": round(max(0.0, res.makespan_us - res.critical_path_us), 2),
         },

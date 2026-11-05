@@ -7,15 +7,15 @@
     "npu"
   ],
   "cross_backend_edges": 0,
-  "latency_us": 106.06,
+  "latency_us": 117.24,
   "baseline_us": {
-    "cpu": 1180.08,
-    "gpu": 228.2,
-    "npu": 106.06
+    "cpu": 1238.49,
+    "gpu": 245.34,
+    "npu": 117.24
   },
   "speedup": 1.0,
   "theoretical_upper_bound": 1.0,
-  "steady_fps": 9428.98,
+  "steady_fps": 8529.76,
   "parallel_execution": false,
   "overlap_pairs": 0,
   "numerics_pass": true,

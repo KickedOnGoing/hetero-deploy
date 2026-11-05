@@ -1,5 +1,5 @@
 {
-  "graph": "model",
+  "graph": "ChainNet",
   "plan": {
     "verdict": "NOT_RECOMMENDED",
     "reason": "该图为链式 DAG（最大宽度=1），不存在可并行的独立分支；任何算子级切分只会引入跨片搬运与同步，单帧延迟必然变差。建议：单后端整图编译 + 跨帧流水（仅提升吞吐）。",
@@ -26,44 +26,46 @@
       }
     },
     "baselines_single_backend_us": {
-      "cpu": 1180.08,
-      "gpu": 228.2,
-      "npu": 106.06
+      "cpu": 1238.49,
+      "gpu": 245.34,
+      "npu": 117.24
     },
     "naive_sequential_baselines_us": {
-      "cpu": 1180.08,
-      "gpu": 228.2,
-      "npu": 106.06
+      "cpu": 1238.49,
+      "gpu": 245.34,
+      "npu": 117.24
     },
     "best_single_backend": "npu",
     "_baseline_note": "基线为单后端方案的离散事件模拟（含其自身的降级搬运），与分区方案可比",
     "bound": {
-      "baseline_single_backend_us": 106.06,
-      "naive_sequential_baseline_us": 106.06,
+      "baseline_single_backend_us": 117.24,
+      "naive_sequential_baseline_us": 117.24,
       "baseline_is_fair_simulation": true,
-      "partitioned_latency_us": 106.06,
+      "partitioned_latency_us": 117.24,
       "latency_speedup": 1.0,
-      "total_serial_compute_us": 106.06,
-      "T1_serial_partitioned_us": 106.06,
-      "Tinf_critical_path_us": 106.06,
+      "total_serial_compute_us": 117.24,
+      "T1_serial_partitioned_us": 117.24,
+      "Tinf_critical_path_us": 117.24,
       "theoretical_upper_bound_vs_baseline": 1.0,
       "intrinsic_parallelism_T1_over_Tinf": 1.0,
       "parallel_efficiency": 1.0,
       "transfer_overhead_ratio": 0.0
     },
     "simulation": {
-      "makespan_us": 106.06,
-      "steady_frame_us": 106.06,
-      "throughput_fps": 9428.98,
-      "total_compute_us": 16.06,
-      "total_transfer_us": 0,
+      "makespan_us": 117.24,
+      "steady_frame_us": 117.24,
+      "throughput_fps": 8529.76,
+      "total_compute_us": 27.24,
+      "total_transfer_us": 0.0,
+      "dma_busy_us": 0.0,
+      "transfer_edges": 0,
       "total_launch_us": 90.0,
-      "critical_path_us": 106.06,
+      "critical_path_us": 117.24,
       "overlap_pairs": 0,
       "backend_busy_us": {
         "cpu": 0.0,
         "gpu": 0.0,
-        "npu": 106.06
+        "npu": 117.24
       },
       "utilization": {
         "cpu": 0.0,
@@ -80,16 +82,79 @@
     "pipeline": {
       "pipeline_depth": 2,
       "bottleneck_backend": "npu",
-      "steady_frame_us": 106.06,
-      "steady_fps": 9428.98,
-      "single_frame_latency_us": 106.06,
-      "no_pipeline_fps": 9428.98,
-      "ideal_balanced_fps": 28286.93,
+      "steady_frame_us": 117.24,
+      "steady_fps": 8529.76,
+      "single_frame_latency_us": 117.24,
+      "no_pipeline_fps": 8529.76,
+      "ideal_balanced_fps": 25589.27,
       "note": "跨帧流水让不同帧占用不同后端，提高吞吐但不降低单帧延迟"
     },
+    "memory": {
+      "align": 64,
+      "slot_count": 4,
+      "reusable_tensors": 7,
+      "persistent_tensors": 10,
+      "alias_tensors": [
+        "flatten"
+      ],
+      "alias_count": 1,
+      "naive_activation_bytes": 1310976,
+      "peak_activation_bytes": 786432,
+      "activation_saving_ratio": 0.4001,
+      "weights_bytes": 227880,
+      "io_persistent_bytes": 12352,
+      "naive_total_bytes": 1551208,
+      "peak_total_bytes": 1026664,
+      "slots": [
+        {
+          "id": 0,
+          "bytes": 131072,
+          "tensors": [
+            "batch_norm",
+            "adaptive_avg_pool2d"
+          ]
+        },
+        {
+          "id": 1,
+          "bytes": 131072,
+          "tensors": [
+            "relu_"
+          ]
+        },
+        {
+          "id": 2,
+          "bytes": 262144,
+          "tensors": [
+            "batch_norm_1",
+            "batch_norm_2"
+          ]
+        },
+        {
+          "id": 3,
+          "bytes": 262144,
+          "tensors": [
+            "relu__1",
+            "relu__2"
+          ]
+        }
+      ],
+      "tensor_slots": {
+        "batch_norm": 0,
+        "relu_": 1,
+        "batch_norm_1": 2,
+        "relu__1": 3,
+        "batch_norm_2": 2,
+        "relu__2": 3,
+        "adaptive_avg_pool2d": 0,
+        "flatten": 0
+      },
+      "_note": "复用条件基于依赖偏序（祖先集），在并行分支上同样安全；view 类算子为零拷贝别名，与其根张量共槽、不单独占缓冲，故 naive 只统计需要独立缓冲的张量；多帧流水时每帧独立一套 slot 池，峰值需乘以在飞帧数。",
+      "verified": true
+    },
     "cost_breakdown": {
-      "compute_us": 16.06,
-      "transfer_us": 0,
+      "compute_us": 27.24,
+      "transfer_us": 0.0,
+      "dma_busy_us": 0.0,
       "launch_us": 90.0,
       "resource_idle_us": 0.0
     },
@@ -105,11 +170,11 @@
     "selected_candidate": "search",
     "strategy": "auto",
     "search": {
-      "initial_us": 574.07,
-      "final_us": 106.06,
-      "improvement_pct": 81.53,
-      "iterations": 1800,
-      "accepted_moves": 62
+      "initial_us": 119.24,
+      "final_us": 117.24,
+      "improvement_pct": 1.68,
+      "iterations": 1567,
+      "accepted_moves": 1
     },
     "demoted_nodes": 0,
     "small_npu_parts": 0,
@@ -134,7 +199,8 @@
     "hints": 0,
     "bn_folded": 3,
     "identity_removed": 0,
-    "silu_decomposed": 0
+    "silu_decomposed": 0,
+    "orphan_weights_removed": 12
   },
   "parts": [
     {
@@ -148,7 +214,7 @@
         "flatten": 1,
         "linear": 1
       },
-      "est_us": 106.06,
+      "est_us": 117.24,
       "cross_in": [],
       "cross_out": [],
       "reason": "算子在 APU 支持表内且计算密集，放 NPU 取得最高能效"
@@ -161,17 +227,23 @@
       "cpu": {
         "peak_gflops": 180.0,
         "launch_us": 12.0,
-        "layout": "NCHW"
+        "layout": "NCHW",
+        "mem_bw_gbps": 25.0,
+        "slots": 1
       },
       "gpu": {
         "peak_gflops": 1400.0,
         "launch_us": 45.0,
-        "layout": "NHWC"
+        "layout": "NHWC",
+        "mem_bw_gbps": 90.0,
+        "slots": 1
       },
       "npu": {
         "peak_gflops": 9000.0,
         "launch_us": 90.0,
-        "layout": "NHWC"
+        "layout": "NHWC",
+        "mem_bw_gbps": 150.0,
+        "slots": 1
       }
     },
     "fixed_cross_us": 35.0,

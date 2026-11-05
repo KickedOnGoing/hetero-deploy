@@ -2,15 +2,17 @@
   "_note": "零拷贝成立的前提是上下游后端要求相同的 buffer type / layout / stride。若 NPU 只接受特定对齐的 AHWB 而 GPU 产出 GL texture，则每帧都要转换一次，收益会被吃掉 —— 这是上板前必须验证的握手项。",
   "requirements": [
     {
-      "tensor": "flatten_1",
+      "tensor": "silu_1",
       "from_part": 0,
       "to_part": 1,
       "src_backend": "gpu",
       "dst_backend": "cpu",
-      "bytes": 128,
+      "bytes": 131072,
       "dtype": "f32",
       "shape": [
         1,
+        32,
+        32,
         32
       ],
       "alignment": 128,
@@ -20,7 +22,7 @@
       "zero_copy": false,
       "buffer_type": "AHardwareBuffer / DMA-BUF",
       "sync": "LiteRtEvent (sync fence fd)",
-      "cost_us": 55.002
+      "cost_us": 57.359
     },
     {
       "tensor": "relu_",

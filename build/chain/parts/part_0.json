@@ -19,7 +19,7 @@
     "outputs": [
       "linear"
     ],
-    "est_us": 106.056,
+    "est_us": 117.237,
     "artifact": "",
     "compile_flags": {
       "target": "npu"
@@ -53,6 +53,7 @@
         "groups": 1
       },
       "flops": 1802240,
+      "io_bytes": 146944,
       "part": 0,
       "backend": "npu",
       "name": "conv2d"
@@ -68,6 +69,7 @@
       ],
       "attrs": {},
       "flops": 65536,
+      "io_bytes": 262144,
       "part": 0,
       "backend": "npu",
       "name": "relu_"
@@ -99,6 +101,7 @@
         "groups": 1
       },
       "flops": 37814272,
+      "io_bytes": 467200,
       "part": 0,
       "backend": "npu",
       "name": "conv2d_1"
@@ -114,6 +117,7 @@
       ],
       "attrs": {},
       "flops": 131072,
+      "io_bytes": 524288,
       "part": 0,
       "backend": "npu",
       "name": "relu__1"
@@ -145,6 +149,7 @@
         "groups": 1
       },
       "flops": 75563008,
+      "io_bytes": 672000,
       "part": 0,
       "backend": "npu",
       "name": "conv2d_2"
@@ -160,6 +165,7 @@
       ],
       "attrs": {},
       "flops": 131072,
+      "io_bytes": 524288,
       "part": 0,
       "backend": "npu",
       "name": "relu__2"
@@ -175,6 +181,7 @@
       ],
       "attrs": {},
       "flops": 131072,
+      "io_bytes": 262400,
       "part": 0,
       "backend": "npu",
       "name": "adaptive_avg_pool2d"
@@ -192,6 +199,7 @@
         "start_dim": 1
       },
       "flops": 0,
+      "io_bytes": 512,
       "part": 0,
       "backend": "npu",
       "name": "flatten"
@@ -209,6 +217,7 @@
       ],
       "attrs": {},
       "flops": 1290,
+      "io_bytes": 2896,
       "part": 0,
       "backend": "npu",
       "name": "linear"
@@ -227,7 +236,8 @@
       "kind": "input",
       "offset": -1,
       "bytes": 12288,
-      "producer": ""
+      "producer": "",
+      "slot": -1
     },
     "p_net_0_0_weight": {
       "id": "p_net_0_0_weight",
@@ -241,7 +251,8 @@
       "kind": "weight",
       "offset": 0,
       "bytes": 3456,
-      "producer": ""
+      "producer": "",
+      "slot": -1
     },
     "conv2d_bias": {
       "id": "conv2d_bias",
@@ -250,9 +261,10 @@
         32
       ],
       "kind": "bias",
-      "offset": 229824,
+      "offset": 227264,
       "bytes": 128,
-      "producer": ""
+      "producer": "",
+      "slot": -1
     },
     "batch_norm": {
       "id": "batch_norm",
@@ -266,7 +278,8 @@
       "kind": "activation",
       "offset": -1,
       "bytes": 131072,
-      "producer": "conv2d"
+      "producer": "conv2d",
+      "slot": 0
     },
     "relu_": {
       "id": "relu_",
@@ -280,7 +293,8 @@
       "kind": "activation",
       "offset": -1,
       "bytes": 131072,
-      "producer": "relu_"
+      "producer": "relu_",
+      "slot": 1
     },
     "p_net_1_0_weight": {
       "id": "p_net_1_0_weight",
@@ -292,9 +306,10 @@
         3
       ],
       "kind": "weight",
-      "offset": 3712,
+      "offset": 3456,
       "bytes": 73728,
-      "producer": ""
+      "producer": "",
+      "slot": -1
     },
     "conv2d_1_bias": {
       "id": "conv2d_1_bias",
@@ -303,9 +318,10 @@
         64
       ],
       "kind": "bias",
-      "offset": 229952,
+      "offset": 227392,
       "bytes": 256,
-      "producer": ""
+      "producer": "",
+      "slot": -1
     },
     "batch_norm_1": {
       "id": "batch_norm_1",
@@ -319,7 +335,8 @@
       "kind": "activation",
       "offset": -1,
       "bytes": 262144,
-      "producer": "conv2d_1"
+      "producer": "conv2d_1",
+      "slot": 2
     },
     "relu__1": {
       "id": "relu__1",
@@ -333,7 +350,8 @@
       "kind": "activation",
       "offset": -1,
       "bytes": 262144,
-      "producer": "relu__1"
+      "producer": "relu__1",
+      "slot": 3
     },
     "p_net_2_0_weight": {
       "id": "p_net_2_0_weight",
@@ -345,9 +363,10 @@
         3
       ],
       "kind": "weight",
-      "offset": 77952,
+      "offset": 77184,
       "bytes": 147456,
-      "producer": ""
+      "producer": "",
+      "slot": -1
     },
     "conv2d_2_bias": {
       "id": "conv2d_2_bias",
@@ -356,9 +375,10 @@
         64
       ],
       "kind": "bias",
-      "offset": 230208,
+      "offset": 227648,
       "bytes": 256,
-      "producer": ""
+      "producer": "",
+      "slot": -1
     },
     "batch_norm_2": {
       "id": "batch_norm_2",
@@ -372,7 +392,8 @@
       "kind": "activation",
       "offset": -1,
       "bytes": 262144,
-      "producer": "conv2d_2"
+      "producer": "conv2d_2",
+      "slot": 2
     },
     "relu__2": {
       "id": "relu__2",
@@ -386,7 +407,8 @@
       "kind": "activation",
       "offset": -1,
       "bytes": 262144,
-      "producer": "relu__2"
+      "producer": "relu__2",
+      "slot": 3
     },
     "adaptive_avg_pool2d": {
       "id": "adaptive_avg_pool2d",
@@ -400,7 +422,8 @@
       "kind": "activation",
       "offset": -1,
       "bytes": 256,
-      "producer": "adaptive_avg_pool2d"
+      "producer": "adaptive_avg_pool2d",
+      "slot": 0
     },
     "flatten": {
       "id": "flatten",
@@ -412,7 +435,8 @@
       "kind": "activation",
       "offset": -1,
       "bytes": 256,
-      "producer": "flatten"
+      "producer": "flatten",
+      "slot": 0
     },
     "p_net_5_weight": {
       "id": "p_net_5_weight",
@@ -422,9 +446,10 @@
         64
       ],
       "kind": "weight",
-      "offset": 225920,
+      "offset": 224640,
       "bytes": 2560,
-      "producer": ""
+      "producer": "",
+      "slot": -1
     },
     "p_net_5_bias": {
       "id": "p_net_5_bias",
@@ -433,9 +458,10 @@
         10
       ],
       "kind": "weight",
-      "offset": 228480,
+      "offset": 227200,
       "bytes": 40,
-      "producer": ""
+      "producer": "",
+      "slot": -1
     },
     "linear": {
       "id": "linear",
@@ -447,7 +473,8 @@
       "kind": "output",
       "offset": -1,
       "bytes": 40,
-      "producer": "linear"
+      "producer": "linear",
+      "slot": -1
     }
   },
   "target": "npu",

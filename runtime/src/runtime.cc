@@ -49,6 +49,7 @@ Model parse_model(const JValue& j) {
         t.offset = v.at("offset").as_int(-1);
         t.bytes = (size_t)v.at("bytes").as_int(0);
         t.producer = v.at("producer").as_str("");
+        t.slot = v.has("slot") ? (int)v.at("slot").as_int(-1) : -1;
         m.tensors.push_back(std::move(t));
     }
     for (const auto& v : j.at("nodes").arr) {
@@ -92,8 +93,19 @@ Model parse_model(const JValue& j) {
     }
     m.weights_file = j.at("weights_file").as_str("weights.bin");
     m.weights_bytes = (size_t)j.at("weights_bytes").as_int(0);
+    // 编译期内存规划：slot_bytes 决定运行时实际分配的共享缓冲块
+    if (j.has("memory")) {
+        const JValue& mm = j.at("memory");
+        m.memory_naive_bytes = (size_t)mm.at("naive_activation_bytes").as_int(0);
+        m.memory_peak_bytes = (size_t)mm.at("peak_activation_bytes").as_int(0);
+        if (mm.has("slots")) {
+            for (const auto& s : mm.at("slots").arr)
+                m.slot_bytes.push_back((size_t)s.at("bytes").as_int(0));
+        }
+    }
     if (j.has("plan")) m.plan = j.at("plan");
     if (j.has("chip")) m.chip = j.at("chip");
+    m.build_index();
     return m;
 }
 
@@ -153,6 +165,14 @@ public:
     FrameState(const Model& m, std::shared_ptr<std::vector<float>> weights,
                const std::vector<std::vector<float>>& inputs, bool compute)
         : m_(m), weights_(std::move(weights)), compute_(compute) {
+        // 按编译期 slot 规划共享缓冲：一个 slot 只分配一块内存，生命周期
+        // 不重叠的张量复用之。旧实现每个张量各一块 vector，峰值 = 全图激活之和。
+        slots_.resize(m_.slot_bytes.size());
+        for (size_t i = 0; i < slots_.size(); ++i) {
+            const size_t elems = std::max<size_t>(1, m_.slot_bytes[i] / sizeof(float));
+            slots_[i] = std::make_shared<std::vector<float>>(elems, 0.0f);
+            slot_allocated_ += elems * sizeof(float);
+        }
         for (const auto& d : m_.tensors) {
             TensorBuf& t = tensors_[d.id];
             t.desc = d;
@@ -160,10 +180,16 @@ public:
                 t.storage = weights_;
                 t.offset = (size_t)(d.offset / 4);   // 原型统一 f32
                 t.ready = true;
+            } else if (d.slot >= 0 && (size_t)d.slot < slots_.size()) {
+                t.storage = slots_[(size_t)d.slot];
+                t.offset = 0;
+                t.ready = false;
             } else {
+                // 图 IO / 旧版 manifest（无 slot 规划）：退化为独占，保持兼容
                 t.storage = std::make_shared<std::vector<float>>(d.numel(), 0.0f);
                 t.offset = 0;
                 t.ready = false;
+                io_allocated_ += d.numel() * sizeof(float);
             }
             t.owner = Backend::CPU;
         }
@@ -174,6 +200,10 @@ public:
             t.ready = true;
         }
     }
+
+    // 本帧实际分配的运行时字节（不含 Engine 级共享的权重）
+    size_t allocated_bytes() const { return slot_allocated_ + io_allocated_; }
+    size_t slot_bytes() const { return slot_allocated_; }
 
     bool exists(const std::string& id) const override { return tensors_.count(id) > 0; }
 
@@ -202,6 +232,9 @@ private:
     std::shared_ptr<std::vector<float>> weights_;
     bool compute_ = true;
     std::unordered_map<std::string, TensorBuf> tensors_;
+    std::vector<std::shared_ptr<std::vector<float>>> slots_;
+    size_t slot_allocated_ = 0;
+    size_t io_allocated_ = 0;
 };
 
 // ------------------------------------------------------------ 调度任务
@@ -309,6 +342,7 @@ RunReport Engine::run(const Options& opt) {
     struct Q { std::mutex m; std::condition_variable cv; std::deque<Task> d; bool stop = false; };
     Q queues[4];                       // 0..2 = cpu/gpu/npu, 3 = DMA/transfer
     std::atomic<int> finished{0};
+    std::atomic<bool> failed{false};   // 跨线程错误标志，避免无锁读 errors
     std::mutex meta_mtx;               // 保护帧元数据 / 计数 / 时间线 / 错误
     std::vector<std::string> errors;
     int next_frame = 0;
@@ -403,6 +437,7 @@ RunReport Engine::run(const Options& opt) {
                     rep.timeline.push_back(std::move(pt));
                     if (!ok) {
                         errors.push_back(err.empty() ? "backend execute failed" : err);
+                        failed.store(true);
                         stop_all();
                     }
                 }
@@ -423,18 +458,17 @@ RunReport Engine::run(const Options& opt) {
                             edge_done(t.frame, d);
                         }
                     }
-                    int rem;
+                    int rem = 0, nf = -1;
                     {
                         std::lock_guard<std::mutex> lk(meta_mtx);
                         rem = --frames[t.frame].remaining;
+                        // next_frame 必须与 remaining 在同一把锁内推进：
+                        // 旧实现多个 worker 线程无锁自增，属于数据竞争。
+                        if (rem == 0 && next_frame < F) nf = next_frame++;
                     }
                     int done = ++finished;
-                    if (rem == 0 && next_frame < F) {
-                        int nf = next_frame++;
-                        launch_frame(nf);
-                    }
-                    if (done >= total || !errors.empty())
-                        stop_all();
+                    if (nf >= 0) launch_frame(nf);
+                    if (done >= total || failed.load()) stop_all();
                 } else {
                     edge_done(t.frame, t.dst);
                 }
@@ -474,6 +508,22 @@ RunReport Engine::run(const Options& opt) {
     try {
         rep.predicted_us = m.plan.at("simulation").at("makespan_us").as_num(0.0);
     } catch (...) { rep.predicted_us = 0.0; }
+
+    // ---- 内存指标：编译期 slot 规划 + 运行时实测交叉核对 ----
+    rep.slot_count = m.slot_bytes.size();
+    rep.naive_activation_bytes = m.memory_naive_bytes;
+    rep.peak_activation_bytes = m.memory_peak_bytes;
+    if (!frames.empty() && frames[0].store) {
+        rep.runtime_allocated_bytes = frames[0].store->allocated_bytes();
+        if (rep.peak_activation_bytes == 0)
+            rep.peak_activation_bytes = frames[0].store->slot_bytes();
+    }
+    rep.buffer_reuse_ratio = rep.naive_activation_bytes > 0
+        ? 1.0 - (double)rep.peak_activation_bytes / (double)rep.naive_activation_bytes
+        : 0.0;
+    rep.frames_in_flight = std::max(1, opt.pipeline_depth);
+    rep.inflight_peak_bytes = rep.peak_activation_bytes * rep.frames_in_flight;
+
     rep.completed_parts = (size_t)finished.load();
     rep.ok = errors.empty() && finished.load() == total;
     if (!errors.empty()) rep.error = errors.front();
@@ -554,6 +604,15 @@ JValue RunReport::to_json() const {
     put("numerics_ok", boolean(numerics_ok));
     put("completed_parts", num((double)completed_parts));
     put("overlap_pairs", num((double)overlap_pairs));
+    JValue mem; mem.type = JValue::T::Obj;
+    mem.obj.emplace_back("slot_count", num((double)slot_count));
+    mem.obj.emplace_back("naive_activation_bytes", num((double)naive_activation_bytes));
+    mem.obj.emplace_back("peak_activation_bytes", num((double)peak_activation_bytes));
+    mem.obj.emplace_back("buffer_reuse_ratio", num(buffer_reuse_ratio));
+    mem.obj.emplace_back("runtime_allocated_bytes", num((double)runtime_allocated_bytes));
+    mem.obj.emplace_back("frames_in_flight", num((double)frames_in_flight));
+    mem.obj.emplace_back("inflight_peak_bytes", num((double)inflight_peak_bytes));
+    put("memory", std::move(mem));
     JValue busy; busy.type = JValue::T::Obj;
     busy.obj.emplace_back("cpu", num(backend_busy_us[0]));
     busy.obj.emplace_back("gpu", num(backend_busy_us[1]));
@@ -585,6 +644,12 @@ std::string RunReport::brief() const {
        << " overlap_pairs=" << overlap_pairs << "\n";
     os << "backend busy(us): cpu=" << backend_busy_us[0]
        << " gpu=" << backend_busy_us[1] << " npu=" << backend_busy_us[2] << "\n";
+    os << "memory: slots=" << slot_count
+       << " naive=" << naive_activation_bytes << "B"
+       << " peak=" << peak_activation_bytes << "B"
+       << " reuse=" << (buffer_reuse_ratio * 100.0) << "%"
+       << " runtime_alloc=" << runtime_allocated_bytes << "B"
+       << " in-flight(" << frames_in_flight << "f)=" << inflight_peak_bytes << "B\n";
     os << "numerics_ok=" << (numerics_ok ? "true" : "false")
        << " max_abs_err=" << max_abs_err << "\n";
     if (!error.empty()) os << "error: " << error << "\n";

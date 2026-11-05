@@ -20,6 +20,7 @@ from .codegen import Codegen
 from .cost import CostModel, simulate
 from .ir import Graph
 from .lower import lower
+from .memory import plan_buffers, verify_buffer_plan
 from .opset import load_chip
 from .partition import PartitionConfig, explain, partition
 from .planner import make_plan
@@ -100,13 +101,20 @@ def compile_model(
                           pipeline_depth=pipeline_depth)
     g, trace = partition(g, cm, cfg)
 
-    # 4) 计划与判定
+    # 4) 内存规划（liveness + 共享缓冲槽），并静态证明无并发读写冲突
+    mem = plan_buffers(g)
+    buff_errs = verify_buffer_plan(g, mem)
+    if buff_errs:
+        raise RuntimeError("缓冲复用规划冲突:\n  " + "\n  ".join(buff_errs))
+    g.meta["memory"] = mem
+
+    # 5) 计划与判定
     plan = make_plan(g, cm, pipeline_depth=pipeline_depth)
-    g.name = getattr(model, "__class__.__name__", "model")
+    g.name = type(model).__name__
     g.meta["chip"] = chip_cfg
     g.meta["strategy"] = strategy
 
-    # 5) 校验（数值 + 结构），失败直接抛错
+    # 6) 校验（数值 + 结构），失败直接抛错
     numerics = verify_numerics(cap, g, atol=atol, rtol=rtol)
     structure = verify_structure(g)
     if not numerics["pass"]:
@@ -114,7 +122,7 @@ def compile_model(
     if not structure["pass"]:
         raise RuntimeError("分区结构校验失败: " + json.dumps(structure, ensure_ascii=False))
 
-    # 6) 产物
+    # 7) 产物
     with torch.no_grad():
         ref = cap.ep.module()(*cap.sample_inputs)
     expected = tuple(ref) if isinstance(ref, (tuple, list)) else (ref,)

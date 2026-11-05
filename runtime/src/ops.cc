@@ -349,8 +349,17 @@ void reduce(const NodeDesc& n, const Model& m, ITensorStore& s, bool is_max) {
 void view(const NodeDesc& n, const Model& m, ITensorStore& s) {
     TensorBuf& x = s.get(n.inputs[0]);
     TensorBuf& y = OUT(s, m, n.outputs[0]);
-    y.storage = x.storage;          // 零拷贝视图
-    y.offset = x.offset;
+    if (x.desc.slot >= 0 && y.desc.slot == x.desc.slot) {
+        // 编译期已把 view 输出与其根张量规划到同一共享槽，零拷贝别名成立，
+        // 且不会破坏 slot 复用规划。
+        y.storage = x.storage;
+        y.offset = x.offset;
+    } else {
+        // 输出为常驻/独占缓冲（或旧版 manifest 无 slot 规划）：必须真实拷贝，
+        // 否则把常驻缓冲指向可复用槽会被后续写入覆盖。
+        const size_t cnt = std::min(x.numel(), y.numel());
+        std::copy(x.data(), x.data() + cnt, y.data());
+    }
     y.owner = x.owner;
     y.ready = true;
 }

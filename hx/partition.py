@@ -200,12 +200,20 @@ def _small_npu_parts(g: Graph, cm: CostModel) -> list[Part]:
 
 
 def score(g: Graph, assign: dict[str, str], cm: CostModel,
-          cfg: PartitionConfig) -> tuple[float, Any]:
+          cfg: PartitionConfig,
+          cache: dict[tuple[str, ...], tuple[float, Any]] | None = None
+          ) -> tuple[float, Any]:
     """评价函数 = 离散事件模拟 makespan + 碎片惩罚 + 小 NPU 子图惩罚。
 
     小 NPU 子图用软惩罚而非强制降级：强制降级到 CPU 会让计算密集算子
     瞬间慢一个数量级，是分区器最容易犯的灾难性错误（见 docs/01 反例）。
+
+    可选的 cache 以 assignment 元组为键：模拟退火会反复回到同一绑定，
+    缓存命中直接复用结果，避免重复 build_parts + simulate（热点 O(N+E)）。
     """
+    key = tuple(assign[n.id] for n in g.nodes) if cache is not None else None
+    if key is not None and key in cache:
+        return cache[key]
     try:
         parts, _ = build_parts(g, assign, cm, cfg)
         res = simulate(g, cm)
@@ -222,9 +230,12 @@ def score(g: Graph, assign: dict[str, str], cm: CostModel,
                     pen += 20000.0          # 禁止「22+1」式伪异构
             if res.overlap_pairs == 0:
                 pen += 20000.0              # 必须存在真实的时间重叠
-        return res.makespan_us + pen, res
+        out = (res.makespan_us + pen, res)
     except (ValueError, KeyError):
-        return float("inf"), None
+        out = (float("inf"), None)
+    if key is not None:
+        cache[key] = out
+    return out
 
 
 def _single_assignment(g: Graph, b: str, cm: CostModel) -> dict[str, str]:
@@ -240,21 +251,21 @@ def _single_assignment(g: Graph, b: str, cm: CostModel) -> dict[str, str]:
     return out
 
 
-def _same_backend_block(g: Graph, assign: dict[str, str], nid: str) -> list[str]:
+def _undirected_adj(g: Graph) -> dict[str, list[str]]:
+    """预计算无向邻接表。搜索期不变，避免每次变异都 O(E) 重建。"""
+    adj: dict[str, set[str]] = {n.id: set() for n in g.nodes}
+    for n, ps in g.preds().items():
+        for p in ps:
+            if n in adj and p in adj:
+                adj[n].add(p)
+                adj[p].add(n)
+    return {k: sorted(v) for k, v in adj.items()}
+
+
+def _same_backend_block(adj: dict[str, list[str]], assign: dict[str, str],
+                        nid: str) -> list[str]:
     """沿依赖边做 BFS，取与 nid 同后端的连通块，用于块级变异。"""
     b = assign[nid]
-    preds, succs = g.preds(), g.succs()
-    adj: dict[str, list[str]] = {n: [] for n in assign}
-    for n, ps in preds.items():
-        for p in ps:
-            adj[n].append(p)
-            adj[p].append(n)
-    for n, ss in succs.items():
-        for s in ss:
-            if s not in adj[n]:
-                adj[n].append(s)
-            if n not in adj[s]:
-                adj[s].append(n)
     seen, stack, block = {nid}, [nid], []
     while stack:
         u = stack.pop()
@@ -275,23 +286,25 @@ def search(g: Graph, cm: CostModel, cfg: PartitionConfig) -> tuple[dict[str, str
     rng = random.Random(cfg.seed)
     trace = SearchTrace()
     legal: dict[str, list[str]] = {n.id: _legal(g, n) or ["cpu"] for n in g.nodes}
+    adj = _undirected_adj(g)
+    node_ids = [n.id for n in g.nodes]
+    cache: dict[tuple[str, ...], tuple[float, Any]] = {}
 
     greedy = initial_assignment(g, cm, cfg)
-    trace.initial_us, _ = score(g, greedy, cm, cfg)
+    trace.initial_us, _ = score(g, greedy, cm, cfg, cache)
     seeds = [greedy]
     if cfg.allow_single_candidates:
         seeds += [_single_assignment(g, b, cm) for b in BACKENDS]
-    evaluated = [(score(g, s, cm, cfg)[0], s) for s in seeds]
+    evaluated = [(score(g, s, cm, cfg, cache)[0], s) for s in seeds]
     evaluated.sort(key=lambda x: x[0])
 
     best_global: dict[str, str] = dict(evaluated[0][1])
     best_score: float = evaluated[0][0]
 
     for restart in range(cfg.restarts):
-        if restart == 0:
-            assign = dict(best_global)
-        elif restart - 1 < len(evaluated):
-            assign = dict(evaluated[restart - 1][1])
+        # 每个重启使用**不同**种子；旧实现 restart 0/1 都取 evaluated[0]，白跑一次
+        if restart < len(evaluated):
+            assign = dict(evaluated[restart][1])
         else:
             assign = {}
             for n in g.nodes:
@@ -299,19 +312,37 @@ def search(g: Graph, cm: CostModel, cfg: PartitionConfig) -> tuple[dict[str, str
                     assign[n.id] = n.hint if n.hint in legal[n.id] else legal[n.id][0]
                 else:
                     assign[n.id] = rng.choice(legal[n.id])
-        cur_score, _ = score(g, assign, cm, cfg)
+        cur_score, _ = score(g, assign, cm, cfg, cache)
         T0 = max(1.0, trace.initial_us * 0.12)
         best_local, best_local_score = dict(assign), cur_score
         for it in range(cfg.iters):
             T = T0 * (1.0 - it / cfg.iters) ** 2 + 0.05
-            nid = rng.choice(g.nodes).id
+            nid = rng.choice(node_ids)
             alts = [b for b in legal[nid] if b != assign[nid]]
             if not alts:
                 continue
             newb = rng.choice(alts)
-            # 50% 概率做「整块同后端连通段」变异，跳出碎片局部最优
-            if rng.random() < 0.5:
-                block = _same_backend_block(g, assign, nid)
+            r = rng.random()
+            if r < 0.12:
+                # 分支交换：两块不同后端的连通段互换后端，跳出
+                # 「两条独立分支都抢最快后端」的局部最优
+                other = rng.choice(node_ids)
+                if assign[other] == assign[nid]:
+                    continue
+                ba = _same_backend_block(adj, assign, nid)
+                bb = _same_backend_block(adj, assign, other)
+                xa, xb = assign[nid], assign[other]
+                if not all(xb in legal[x] for x in ba) or not all(xa in legal[x] for x in bb):
+                    continue
+                backup = {x: assign[x] for x in ba}
+                backup.update({x: assign[x] for x in bb})
+                for x in ba:
+                    assign[x] = xb
+                for x in bb:
+                    assign[x] = xa
+            elif r < 0.62:
+                # 整块同后端连通段变异，跳出碎片局部最优
+                block = _same_backend_block(adj, assign, nid)
                 if not all(newb in legal[x] for x in block):
                     continue
                 backup = {x: assign[x] for x in block}
@@ -320,7 +351,7 @@ def search(g: Graph, cm: CostModel, cfg: PartitionConfig) -> tuple[dict[str, str
             else:
                 backup = {nid: assign[nid]}
                 assign[nid] = newb
-            new_score, _ = score(g, assign, cm, cfg)
+            new_score, _ = score(g, assign, cm, cfg, cache)
             d = new_score - cur_score
             if d < 0 or rng.random() < math.exp(-d / T):
                 cur_score = new_score

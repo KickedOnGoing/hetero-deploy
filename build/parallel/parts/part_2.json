@@ -18,7 +18,7 @@
     "outputs": [
       "relu"
     ],
-    "est_us": 105.098,
+    "est_us": 119.756,
     "artifact": "",
     "compile_flags": {
       "target": "gpu"
@@ -52,6 +52,7 @@
         "groups": 1
       },
       "flops": 37814272,
+      "io_bytes": 467200,
       "part": 2,
       "backend": "gpu",
       "name": "conv2d_1",
@@ -68,6 +69,7 @@
       ],
       "attrs": {},
       "flops": 131072,
+      "io_bytes": 524288,
       "part": 2,
       "backend": "gpu",
       "name": "relu__1",
@@ -100,6 +102,7 @@
         "groups": 1
       },
       "flops": 75563008,
+      "io_bytes": 672000,
       "part": 2,
       "backend": "gpu",
       "name": "conv2d_2",
@@ -116,6 +119,7 @@
       ],
       "attrs": {},
       "flops": 131072,
+      "io_bytes": 524288,
       "part": 2,
       "backend": "gpu",
       "name": "relu__2",
@@ -132,6 +136,7 @@
       ],
       "attrs": {},
       "flops": 131072,
+      "io_bytes": 262400,
       "part": 2,
       "backend": "gpu",
       "name": "adaptive_avg_pool2d",
@@ -150,6 +155,7 @@
         "start_dim": 1
       },
       "flops": 0,
+      "io_bytes": 512,
       "part": 2,
       "backend": "gpu",
       "name": "flatten",
@@ -168,6 +174,7 @@
       ],
       "attrs": {},
       "flops": 8256,
+      "io_bytes": 17152,
       "part": 2,
       "backend": "gpu",
       "name": "linear",
@@ -184,6 +191,7 @@
       ],
       "attrs": {},
       "flops": 128,
+      "io_bytes": 512,
       "part": 2,
       "backend": "gpu",
       "name": "relu",
@@ -203,7 +211,8 @@
       "kind": "activation",
       "offset": -1,
       "bytes": 131072,
-      "producer": "relu_"
+      "producer": "relu_",
+      "slot": 1
     },
     "p_branch_a_0_0_weight": {
       "id": "p_branch_a_0_0_weight",
@@ -215,9 +224,10 @@
         3
       ],
       "kind": "weight",
-      "offset": 3712,
+      "offset": 3456,
       "bytes": 73728,
-      "producer": ""
+      "producer": "",
+      "slot": -1
     },
     "conv2d_1_bias": {
       "id": "conv2d_1_bias",
@@ -226,9 +236,10 @@
         64
       ],
       "kind": "bias",
-      "offset": 362048,
+      "offset": 359488,
       "bytes": 256,
-      "producer": ""
+      "producer": "",
+      "slot": -1
     },
     "batch_norm_1": {
       "id": "batch_norm_1",
@@ -242,7 +253,8 @@
       "kind": "activation",
       "offset": -1,
       "bytes": 262144,
-      "producer": "conv2d_1"
+      "producer": "conv2d_1",
+      "slot": 3
     },
     "relu__1": {
       "id": "relu__1",
@@ -256,7 +268,8 @@
       "kind": "activation",
       "offset": -1,
       "bytes": 262144,
-      "producer": "relu__1"
+      "producer": "relu__1",
+      "slot": 4
     },
     "p_branch_a_1_0_weight": {
       "id": "p_branch_a_1_0_weight",
@@ -268,9 +281,10 @@
         3
       ],
       "kind": "weight",
-      "offset": 77952,
+      "offset": 77184,
       "bytes": 147456,
-      "producer": ""
+      "producer": "",
+      "slot": -1
     },
     "conv2d_2_bias": {
       "id": "conv2d_2_bias",
@@ -279,9 +293,10 @@
         64
       ],
       "kind": "bias",
-      "offset": 362304,
+      "offset": 359744,
       "bytes": 256,
-      "producer": ""
+      "producer": "",
+      "slot": -1
     },
     "batch_norm_2": {
       "id": "batch_norm_2",
@@ -295,7 +310,8 @@
       "kind": "activation",
       "offset": -1,
       "bytes": 262144,
-      "producer": "conv2d_2"
+      "producer": "conv2d_2",
+      "slot": 3
     },
     "relu__2": {
       "id": "relu__2",
@@ -309,7 +325,8 @@
       "kind": "activation",
       "offset": -1,
       "bytes": 262144,
-      "producer": "relu__2"
+      "producer": "relu__2",
+      "slot": 4
     },
     "adaptive_avg_pool2d": {
       "id": "adaptive_avg_pool2d",
@@ -323,7 +340,8 @@
       "kind": "activation",
       "offset": -1,
       "bytes": 256,
-      "producer": "adaptive_avg_pool2d"
+      "producer": "adaptive_avg_pool2d",
+      "slot": 3
     },
     "flatten": {
       "id": "flatten",
@@ -335,7 +353,8 @@
       "kind": "activation",
       "offset": -1,
       "bytes": 256,
-      "producer": "flatten"
+      "producer": "flatten",
+      "slot": 3
     },
     "p_branch_a_4_weight": {
       "id": "p_branch_a_4_weight",
@@ -345,9 +364,10 @@
         64
       ],
       "kind": "weight",
-      "offset": 225920,
+      "offset": 224640,
       "bytes": 16384,
-      "producer": ""
+      "producer": "",
+      "slot": -1
     },
     "p_branch_a_4_bias": {
       "id": "p_branch_a_4_bias",
@@ -356,9 +376,10 @@
         64
       ],
       "kind": "weight",
-      "offset": 242304,
+      "offset": 241024,
       "bytes": 256,
-      "producer": ""
+      "producer": "",
+      "slot": -1
     },
     "linear": {
       "id": "linear",
@@ -370,7 +391,8 @@
       "kind": "activation",
       "offset": -1,
       "bytes": 256,
-      "producer": "linear"
+      "producer": "linear",
+      "slot": 4
     },
     "relu": {
       "id": "relu",
@@ -382,7 +404,8 @@
       "kind": "activation",
       "offset": -1,
       "bytes": 256,
-      "producer": "relu"
+      "producer": "relu",
+      "slot": 3
     }
   },
   "target": "gpu",

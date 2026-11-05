@@ -1,6 +1,6 @@
 {
   "verdict": "RECOMMENDED",
-  "reason": "并行分支使关键路径缩短，模拟加速比 2.21×，搬运开销占比 12.0%。",
+  "reason": "并行分支使关键路径缩短，模拟加速比 2.29×，搬运开销占比 10.0%。",
   "nodes": 23,
   "parts": 4,
   "backends": [
@@ -8,15 +8,15 @@
     "npu"
   ],
   "cross_backend_edges": 2,
-  "latency_us": 573.55,
+  "latency_us": 623.39,
   "baseline_us": {
-    "cpu": 14004.25,
-    "gpu": 2237.22,
-    "npu": 1269.47
+    "cpu": 14725.35,
+    "gpu": 2454.19,
+    "npu": 1427.68
   },
-  "speedup": 2.2134,
-  "theoretical_upper_bound": 2.3572,
-  "steady_fps": 2752.19,
+  "speedup": 2.2902,
+  "theoretical_upper_bound": 2.2902,
+  "steady_fps": 2229.78,
   "parallel_execution": true,
   "overlap_pairs": 1,
   "numerics_pass": true,

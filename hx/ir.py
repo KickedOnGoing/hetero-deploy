@@ -31,6 +31,7 @@ class Tensor:
     offset: int = -1             # weights.bin 中的字节偏移；-1 表示运行时激活
     producer: str = ""           # 产出该张量的节点 id
     part: int = -1               # 归属子图（仅权重有意义）
+    slot: int = -1               # 运行时共享缓冲槽；-1 = 常驻/独占（权重、IO）
     data: Any = None             # 仅编译期存在，不进 manifest
 
     @property
@@ -47,7 +48,7 @@ class Tensor:
         return {
             "id": self.id, "dtype": self.dtype, "shape": list(self.shape),
             "kind": self.kind, "offset": self.offset, "bytes": self.nbytes,
-            "producer": self.producer,
+            "producer": self.producer, "slot": self.slot,
         }
 
     @staticmethod
@@ -56,6 +57,7 @@ class Tensor:
             id=d["id"], dtype=d.get("dtype", "f32"),
             shape=tuple(d.get("shape", ())), kind=d.get("kind", "activation"),
             offset=int(d.get("offset", -1)), producer=d.get("producer", ""),
+            slot=int(d.get("slot", -1)),
         )
 
 
@@ -68,6 +70,7 @@ class Node:
     outputs: list[str]
     attrs: dict[str, Any] = dc.field(default_factory=dict)
     flops: int = 0
+    io_bytes: int = 0            # roofline 访存下限所用读写总量
     part: int = -1
     backend: str = ""
     hint: str | None = None       # 训练侧软提示，仅作搜索先验
@@ -76,8 +79,8 @@ class Node:
     def to_dict(self) -> dict[str, Any]:
         d: dict[str, Any] = {
             "id": self.id, "op": self.op, "inputs": self.inputs,
-            "outputs": self.outputs, "attrs": _jsonable(self.attrs),
-            "flops": self.flops, "part": self.part,
+            "outputs": self.outputs,             "attrs": _jsonable(self.attrs),
+            "flops": self.flops, "io_bytes": self.io_bytes, "part": self.part,
             "backend": self.backend, "name": self.name,
         }
         if self.hint:
@@ -89,7 +92,8 @@ class Node:
         return Node(
             id=d["id"], op=d["op"], inputs=list(d["inputs"]),
             outputs=list(d["outputs"]), attrs=d.get("attrs", {}),
-            flops=int(d.get("flops", 0)), part=int(d.get("part", -1)),
+            flops=int(d.get("flops", 0)), io_bytes=int(d.get("io_bytes", 0)),
+            part=int(d.get("part", -1)),
             backend=d.get("backend", ""), hint=d.get("hint"),
             name=d.get("name", ""),
         )
@@ -270,6 +274,7 @@ class Graph:
             "weights_file": self.meta.get("weights_file", "weights.bin"),
             "weights_bytes": self.meta.get("weights_bytes", 0),
             "plan": self.meta.get("plan", {}),
+            "memory": self.meta.get("memory", {}),
             "chip": self.meta.get("chip", {}),
             "meta": self.meta,
         }
@@ -295,6 +300,15 @@ class Graph:
                 inputs=x["inputs"], outputs=x["outputs"],
                 est_us=x.get("est_us", 0.0), artifact=x.get("artifact", ""),
                 compile_flags=x.get("compile_flags", {}),
+            ))
+        # 跨子图边必须一并恢复，否则反序列化后的图无法重新 simulate /
+        # verify_structure（跨片搬运与 DMA 排队信息会凭空消失）。
+        for x in d.get("edges", []):
+            g.edges.append(Edge(
+                src=int(x["src"]), dst=int(x["dst"]), tensor=x["tensor"],
+                src_backend=x["src_backend"], dst_backend=x["dst_backend"],
+                bytes=int(x["bytes"]), cost_us=float(x.get("cost_us", 0.0)),
+                zero_copy=bool(x.get("zero_copy", False)),
             ))
         g.meta = d.get("meta", {})
         return g

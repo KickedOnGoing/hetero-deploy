@@ -19,14 +19,14 @@
     {
       "id": 0,
       "backend": "gpu",
-      "nodes": 8,
+      "nodes": 6,
       "artifact": "parts/part_0.hxbin",
       "command": "# 用上述 gpu 流程编译 parts/part_0.json"
     },
     {
       "id": 1,
       "backend": "cpu",
-      "nodes": 2,
+      "nodes": 4,
       "artifact": "parts/part_1.hxbin",
       "command": "# 用上述 cpu 流程编译 parts/part_1.json"
     },

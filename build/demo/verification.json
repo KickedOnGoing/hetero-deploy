@@ -33,7 +33,7 @@
         "conv2d": 2,
         "relu": 1
       },
-      "est_us": 115.96,
+      "est_us": 137.99,
       "cross_in": [],
       "cross_out": [
         "conv2d_3"
@@ -51,7 +51,7 @@
         "flatten": 1,
         "linear": 1
       },
-      "est_us": 318.33,
+      "est_us": 380.75,
       "cross_in": [
         "conv2d_3"
       ],
@@ -69,7 +69,7 @@
         "flatten": 1,
         "linear": 1
       },
-      "est_us": 232.18,
+      "est_us": 310.49,
       "cross_in": [],
       "cross_out": [
         "relu"
@@ -86,7 +86,7 @@
         "gelu": 1,
         "sigmoid": 1
       },
-      "est_us": 45.02,
+      "est_us": 45.43,
       "cross_in": [
         "relu"
       ],
@@ -95,30 +95,32 @@
     }
   ],
   "search_trace": {
-    "initial_us": 2498.48,
-    "final_us": 573.55,
-    "improvement_pct": 77.04,
-    "iterations": 1638,
-    "accepted_moves": 210
+    "initial_us": 1722.73,
+    "final_us": 623.39,
+    "improvement_pct": 63.81,
+    "iterations": 1404,
+    "accepted_moves": 173
   },
   "simulation": {
-    "makespan_us": 573.55,
-    "steady_frame_us": 363.35,
-    "throughput_fps": 2752.19,
-    "total_compute_us": 441.49,
+    "makespan_us": 623.39,
+    "steady_frame_us": 448.48,
+    "throughput_fps": 2229.78,
+    "total_compute_us": 604.65,
     "total_transfer_us": 97.24,
+    "dma_busy_us": 91.24,
+    "transfer_edges": 2,
     "total_launch_us": 270.0,
-    "critical_path_us": 538.54,
+    "critical_path_us": 623.39,
     "overlap_pairs": 1,
     "backend_busy_us": {
       "cpu": 0.0,
-      "gpu": 363.35,
-      "npu": 348.14
+      "gpu": 426.17,
+      "npu": 448.48
     },
     "utilization": {
       "cpu": 0.0,
-      "gpu": 0.6335,
-      "npu": 0.607
+      "gpu": 0.6836,
+      "npu": 0.7194
     }
   }
 }

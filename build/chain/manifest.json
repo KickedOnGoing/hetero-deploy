@@ -2,7 +2,7 @@
   "version": "1.0",
   "producer": "hx-compile",
   "graph": {
-    "name": "model",
+    "name": "ChainNet",
     "inputs": [
       {
         "id": "x",
@@ -16,7 +16,8 @@
         "kind": "input",
         "offset": -1,
         "bytes": 12288,
-        "producer": ""
+        "producer": "",
+        "slot": -1
       }
     ],
     "outputs": [
@@ -30,7 +31,8 @@
         "kind": "output",
         "offset": -1,
         "bytes": 40,
-        "producer": "linear"
+        "producer": "linear",
+        "slot": -1
       }
     ]
   },
@@ -47,29 +49,8 @@
       "kind": "weight",
       "offset": 0,
       "bytes": 3456,
-      "producer": ""
-    },
-    "p_net_0_1_weight": {
-      "id": "p_net_0_1_weight",
-      "dtype": "f32",
-      "shape": [
-        32
-      ],
-      "kind": "weight",
-      "offset": 3456,
-      "bytes": 128,
-      "producer": ""
-    },
-    "p_net_0_1_bias": {
-      "id": "p_net_0_1_bias",
-      "dtype": "f32",
-      "shape": [
-        32
-      ],
-      "kind": "weight",
-      "offset": 3584,
-      "bytes": 128,
-      "producer": ""
+      "producer": "",
+      "slot": -1
     },
     "p_net_1_0_weight": {
       "id": "p_net_1_0_weight",
@@ -81,31 +62,10 @@
         3
       ],
       "kind": "weight",
-      "offset": 3712,
+      "offset": 3456,
       "bytes": 73728,
-      "producer": ""
-    },
-    "p_net_1_1_weight": {
-      "id": "p_net_1_1_weight",
-      "dtype": "f32",
-      "shape": [
-        64
-      ],
-      "kind": "weight",
-      "offset": 77440,
-      "bytes": 256,
-      "producer": ""
-    },
-    "p_net_1_1_bias": {
-      "id": "p_net_1_1_bias",
-      "dtype": "f32",
-      "shape": [
-        64
-      ],
-      "kind": "weight",
-      "offset": 77696,
-      "bytes": 256,
-      "producer": ""
+      "producer": "",
+      "slot": -1
     },
     "p_net_2_0_weight": {
       "id": "p_net_2_0_weight",
@@ -117,31 +77,10 @@
         3
       ],
       "kind": "weight",
-      "offset": 77952,
+      "offset": 77184,
       "bytes": 147456,
-      "producer": ""
-    },
-    "p_net_2_1_weight": {
-      "id": "p_net_2_1_weight",
-      "dtype": "f32",
-      "shape": [
-        64
-      ],
-      "kind": "weight",
-      "offset": 225408,
-      "bytes": 256,
-      "producer": ""
-    },
-    "p_net_2_1_bias": {
-      "id": "p_net_2_1_bias",
-      "dtype": "f32",
-      "shape": [
-        64
-      ],
-      "kind": "weight",
-      "offset": 225664,
-      "bytes": 256,
-      "producer": ""
+      "producer": "",
+      "slot": -1
     },
     "p_net_5_weight": {
       "id": "p_net_5_weight",
@@ -151,9 +90,10 @@
         64
       ],
       "kind": "weight",
-      "offset": 225920,
+      "offset": 224640,
       "bytes": 2560,
-      "producer": ""
+      "producer": "",
+      "slot": -1
     },
     "p_net_5_bias": {
       "id": "p_net_5_bias",
@@ -162,75 +102,10 @@
         10
       ],
       "kind": "weight",
-      "offset": 228480,
+      "offset": 227200,
       "bytes": 40,
-      "producer": ""
-    },
-    "b_net_0_1_running_mean": {
-      "id": "b_net_0_1_running_mean",
-      "dtype": "f32",
-      "shape": [
-        32
-      ],
-      "kind": "constant",
-      "offset": 228544,
-      "bytes": 128,
-      "producer": ""
-    },
-    "b_net_0_1_running_var": {
-      "id": "b_net_0_1_running_var",
-      "dtype": "f32",
-      "shape": [
-        32
-      ],
-      "kind": "constant",
-      "offset": 228672,
-      "bytes": 128,
-      "producer": ""
-    },
-    "b_net_1_1_running_mean": {
-      "id": "b_net_1_1_running_mean",
-      "dtype": "f32",
-      "shape": [
-        64
-      ],
-      "kind": "constant",
-      "offset": 228800,
-      "bytes": 256,
-      "producer": ""
-    },
-    "b_net_1_1_running_var": {
-      "id": "b_net_1_1_running_var",
-      "dtype": "f32",
-      "shape": [
-        64
-      ],
-      "kind": "constant",
-      "offset": 229056,
-      "bytes": 256,
-      "producer": ""
-    },
-    "b_net_2_1_running_mean": {
-      "id": "b_net_2_1_running_mean",
-      "dtype": "f32",
-      "shape": [
-        64
-      ],
-      "kind": "constant",
-      "offset": 229312,
-      "bytes": 256,
-      "producer": ""
-    },
-    "b_net_2_1_running_var": {
-      "id": "b_net_2_1_running_var",
-      "dtype": "f32",
-      "shape": [
-        64
-      ],
-      "kind": "constant",
-      "offset": 229568,
-      "bytes": 256,
-      "producer": ""
+      "producer": "",
+      "slot": -1
     },
     "x": {
       "id": "x",
@@ -244,7 +119,8 @@
       "kind": "input",
       "offset": -1,
       "bytes": 12288,
-      "producer": ""
+      "producer": "",
+      "slot": -1
     },
     "batch_norm": {
       "id": "batch_norm",
@@ -258,7 +134,8 @@
       "kind": "activation",
       "offset": -1,
       "bytes": 131072,
-      "producer": "conv2d"
+      "producer": "conv2d",
+      "slot": 0
     },
     "relu_": {
       "id": "relu_",
@@ -272,7 +149,8 @@
       "kind": "activation",
       "offset": -1,
       "bytes": 131072,
-      "producer": "relu_"
+      "producer": "relu_",
+      "slot": 1
     },
     "batch_norm_1": {
       "id": "batch_norm_1",
@@ -286,7 +164,8 @@
       "kind": "activation",
       "offset": -1,
       "bytes": 262144,
-      "producer": "conv2d_1"
+      "producer": "conv2d_1",
+      "slot": 2
     },
     "relu__1": {
       "id": "relu__1",
@@ -300,7 +179,8 @@
       "kind": "activation",
       "offset": -1,
       "bytes": 262144,
-      "producer": "relu__1"
+      "producer": "relu__1",
+      "slot": 3
     },
     "batch_norm_2": {
       "id": "batch_norm_2",
@@ -314,7 +194,8 @@
       "kind": "activation",
       "offset": -1,
       "bytes": 262144,
-      "producer": "conv2d_2"
+      "producer": "conv2d_2",
+      "slot": 2
     },
     "relu__2": {
       "id": "relu__2",
@@ -328,7 +209,8 @@
       "kind": "activation",
       "offset": -1,
       "bytes": 262144,
-      "producer": "relu__2"
+      "producer": "relu__2",
+      "slot": 3
     },
     "adaptive_avg_pool2d": {
       "id": "adaptive_avg_pool2d",
@@ -342,7 +224,8 @@
       "kind": "activation",
       "offset": -1,
       "bytes": 256,
-      "producer": "adaptive_avg_pool2d"
+      "producer": "adaptive_avg_pool2d",
+      "slot": 0
     },
     "flatten": {
       "id": "flatten",
@@ -354,7 +237,8 @@
       "kind": "activation",
       "offset": -1,
       "bytes": 256,
-      "producer": "flatten"
+      "producer": "flatten",
+      "slot": 0
     },
     "linear": {
       "id": "linear",
@@ -366,7 +250,8 @@
       "kind": "output",
       "offset": -1,
       "bytes": 40,
-      "producer": "linear"
+      "producer": "linear",
+      "slot": -1
     },
     "conv2d_bias": {
       "id": "conv2d_bias",
@@ -375,9 +260,10 @@
         32
       ],
       "kind": "bias",
-      "offset": 229824,
+      "offset": 227264,
       "bytes": 128,
-      "producer": ""
+      "producer": "",
+      "slot": -1
     },
     "conv2d_1_bias": {
       "id": "conv2d_1_bias",
@@ -386,9 +272,10 @@
         64
       ],
       "kind": "bias",
-      "offset": 229952,
+      "offset": 227392,
       "bytes": 256,
-      "producer": ""
+      "producer": "",
+      "slot": -1
     },
     "conv2d_2_bias": {
       "id": "conv2d_2_bias",
@@ -397,9 +284,10 @@
         64
       ],
       "kind": "bias",
-      "offset": 230208,
+      "offset": 227648,
       "bytes": 256,
-      "producer": ""
+      "producer": "",
+      "slot": -1
     }
   },
   "nodes": [
@@ -430,6 +318,7 @@
         "groups": 1
       },
       "flops": 1802240,
+      "io_bytes": 146944,
       "part": 0,
       "backend": "npu",
       "name": "conv2d"
@@ -445,6 +334,7 @@
       ],
       "attrs": {},
       "flops": 65536,
+      "io_bytes": 262144,
       "part": 0,
       "backend": "npu",
       "name": "relu_"
@@ -476,6 +366,7 @@
         "groups": 1
       },
       "flops": 37814272,
+      "io_bytes": 467200,
       "part": 0,
       "backend": "npu",
       "name": "conv2d_1"
@@ -491,6 +382,7 @@
       ],
       "attrs": {},
       "flops": 131072,
+      "io_bytes": 524288,
       "part": 0,
       "backend": "npu",
       "name": "relu__1"
@@ -522,6 +414,7 @@
         "groups": 1
       },
       "flops": 75563008,
+      "io_bytes": 672000,
       "part": 0,
       "backend": "npu",
       "name": "conv2d_2"
@@ -537,6 +430,7 @@
       ],
       "attrs": {},
       "flops": 131072,
+      "io_bytes": 524288,
       "part": 0,
       "backend": "npu",
       "name": "relu__2"
@@ -552,6 +446,7 @@
       ],
       "attrs": {},
       "flops": 131072,
+      "io_bytes": 262400,
       "part": 0,
       "backend": "npu",
       "name": "adaptive_avg_pool2d"
@@ -569,6 +464,7 @@
         "start_dim": 1
       },
       "flops": 0,
+      "io_bytes": 512,
       "part": 0,
       "backend": "npu",
       "name": "flatten"
@@ -586,6 +482,7 @@
       ],
       "attrs": {},
       "flops": 1290,
+      "io_bytes": 2896,
       "part": 0,
       "backend": "npu",
       "name": "linear"
@@ -612,7 +509,7 @@
       "outputs": [
         "linear"
       ],
-      "est_us": 106.056,
+      "est_us": 117.237,
       "artifact": "",
       "compile_flags": {
         "target": "npu"
@@ -621,7 +518,7 @@
   ],
   "edges": [],
   "weights_file": "weights.bin",
-  "weights_bytes": 230464,
+  "weights_bytes": 227904,
   "plan": {
     "verdict": "NOT_RECOMMENDED",
     "reason": "该图为链式 DAG（最大宽度=1），不存在可并行的独立分支；任何算子级切分只会引入跨片搬运与同步，单帧延迟必然变差。建议：单后端整图编译 + 跨帧流水（仅提升吞吐）。",
@@ -648,44 +545,46 @@
       }
     },
     "baselines_single_backend_us": {
-      "cpu": 1180.08,
-      "gpu": 228.2,
-      "npu": 106.06
+      "cpu": 1238.49,
+      "gpu": 245.34,
+      "npu": 117.24
     },
     "naive_sequential_baselines_us": {
-      "cpu": 1180.08,
-      "gpu": 228.2,
-      "npu": 106.06
+      "cpu": 1238.49,
+      "gpu": 245.34,
+      "npu": 117.24
     },
     "best_single_backend": "npu",
     "_baseline_note": "基线为单后端方案的离散事件模拟（含其自身的降级搬运），与分区方案可比",
     "bound": {
-      "baseline_single_backend_us": 106.06,
-      "naive_sequential_baseline_us": 106.06,
+      "baseline_single_backend_us": 117.24,
+      "naive_sequential_baseline_us": 117.24,
       "baseline_is_fair_simulation": true,
-      "partitioned_latency_us": 106.06,
+      "partitioned_latency_us": 117.24,
       "latency_speedup": 1.0,
-      "total_serial_compute_us": 106.06,
-      "T1_serial_partitioned_us": 106.06,
-      "Tinf_critical_path_us": 106.06,
+      "total_serial_compute_us": 117.24,
+      "T1_serial_partitioned_us": 117.24,
+      "Tinf_critical_path_us": 117.24,
       "theoretical_upper_bound_vs_baseline": 1.0,
       "intrinsic_parallelism_T1_over_Tinf": 1.0,
       "parallel_efficiency": 1.0,
       "transfer_overhead_ratio": 0.0
     },
     "simulation": {
-      "makespan_us": 106.06,
-      "steady_frame_us": 106.06,
-      "throughput_fps": 9428.98,
-      "total_compute_us": 16.06,
-      "total_transfer_us": 0,
+      "makespan_us": 117.24,
+      "steady_frame_us": 117.24,
+      "throughput_fps": 8529.76,
+      "total_compute_us": 27.24,
+      "total_transfer_us": 0.0,
+      "dma_busy_us": 0.0,
+      "transfer_edges": 0,
       "total_launch_us": 90.0,
-      "critical_path_us": 106.06,
+      "critical_path_us": 117.24,
       "overlap_pairs": 0,
       "backend_busy_us": {
         "cpu": 0.0,
         "gpu": 0.0,
-        "npu": 106.06
+        "npu": 117.24
       },
       "utilization": {
         "cpu": 0.0,
@@ -702,16 +601,79 @@
     "pipeline": {
       "pipeline_depth": 2,
       "bottleneck_backend": "npu",
-      "steady_frame_us": 106.06,
-      "steady_fps": 9428.98,
-      "single_frame_latency_us": 106.06,
-      "no_pipeline_fps": 9428.98,
-      "ideal_balanced_fps": 28286.93,
+      "steady_frame_us": 117.24,
+      "steady_fps": 8529.76,
+      "single_frame_latency_us": 117.24,
+      "no_pipeline_fps": 8529.76,
+      "ideal_balanced_fps": 25589.27,
       "note": "跨帧流水让不同帧占用不同后端，提高吞吐但不降低单帧延迟"
     },
+    "memory": {
+      "align": 64,
+      "slot_count": 4,
+      "reusable_tensors": 7,
+      "persistent_tensors": 10,
+      "alias_tensors": [
+        "flatten"
+      ],
+      "alias_count": 1,
+      "naive_activation_bytes": 1310976,
+      "peak_activation_bytes": 786432,
+      "activation_saving_ratio": 0.4001,
+      "weights_bytes": 227880,
+      "io_persistent_bytes": 12352,
+      "naive_total_bytes": 1551208,
+      "peak_total_bytes": 1026664,
+      "slots": [
+        {
+          "id": 0,
+          "bytes": 131072,
+          "tensors": [
+            "batch_norm",
+            "adaptive_avg_pool2d"
+          ]
+        },
+        {
+          "id": 1,
+          "bytes": 131072,
+          "tensors": [
+            "relu_"
+          ]
+        },
+        {
+          "id": 2,
+          "bytes": 262144,
+          "tensors": [
+            "batch_norm_1",
+            "batch_norm_2"
+          ]
+        },
+        {
+          "id": 3,
+          "bytes": 262144,
+          "tensors": [
+            "relu__1",
+            "relu__2"
+          ]
+        }
+      ],
+      "tensor_slots": {
+        "batch_norm": 0,
+        "relu_": 1,
+        "batch_norm_1": 2,
+        "relu__1": 3,
+        "batch_norm_2": 2,
+        "relu__2": 3,
+        "adaptive_avg_pool2d": 0,
+        "flatten": 0
+      },
+      "_note": "复用条件基于依赖偏序（祖先集），在并行分支上同样安全；view 类算子为零拷贝别名，与其根张量共槽、不单独占缓冲，故 naive 只统计需要独立缓冲的张量；多帧流水时每帧独立一套 slot 池，峰值需乘以在飞帧数。",
+      "verified": true
+    },
     "cost_breakdown": {
-      "compute_us": 16.06,
-      "transfer_us": 0,
+      "compute_us": 27.24,
+      "transfer_us": 0.0,
+      "dma_busy_us": 0.0,
       "launch_us": 90.0,
       "resource_idle_us": 0.0
     },
@@ -723,23 +685,91 @@
       "thermal_note": "持续满载 2~3 分钟后 SoC 可能降频（文献实测最高 4.3× 衰减），运行时需启用热感知调度与动态降级"
     }
   },
+  "memory": {
+    "align": 64,
+    "slot_count": 4,
+    "reusable_tensors": 7,
+    "persistent_tensors": 10,
+    "alias_tensors": [
+      "flatten"
+    ],
+    "alias_count": 1,
+    "naive_activation_bytes": 1310976,
+    "peak_activation_bytes": 786432,
+    "activation_saving_ratio": 0.4001,
+    "weights_bytes": 227880,
+    "io_persistent_bytes": 12352,
+    "naive_total_bytes": 1551208,
+    "peak_total_bytes": 1026664,
+    "slots": [
+      {
+        "id": 0,
+        "bytes": 131072,
+        "tensors": [
+          "batch_norm",
+          "adaptive_avg_pool2d"
+        ]
+      },
+      {
+        "id": 1,
+        "bytes": 131072,
+        "tensors": [
+          "relu_"
+        ]
+      },
+      {
+        "id": 2,
+        "bytes": 262144,
+        "tensors": [
+          "batch_norm_1",
+          "batch_norm_2"
+        ]
+      },
+      {
+        "id": 3,
+        "bytes": 262144,
+        "tensors": [
+          "relu__1",
+          "relu__2"
+        ]
+      }
+    ],
+    "tensor_slots": {
+      "batch_norm": 0,
+      "relu_": 1,
+      "batch_norm_1": 2,
+      "relu__1": 3,
+      "batch_norm_2": 2,
+      "relu__2": 3,
+      "adaptive_avg_pool2d": 0,
+      "flatten": 0
+    },
+    "_note": "复用条件基于依赖偏序（祖先集），在并行分支上同样安全；view 类算子为零拷贝别名，与其根张量共槽、不单独占缓冲，故 naive 只统计需要独立缓冲的张量；多帧流水时每帧独立一套 slot 池，峰值需乘以在飞帧数。",
+    "verified": true
+  },
   "chip": {
     "name": "Dimensity-9300-class (可配置模板)",
     "backends": {
       "cpu": {
         "peak_gflops": 180.0,
         "launch_us": 12.0,
-        "layout": "NCHW"
+        "layout": "NCHW",
+        "mem_bw_gbps": 25.0,
+        "slots": 1
       },
       "gpu": {
         "peak_gflops": 1400.0,
         "launch_us": 45.0,
-        "layout": "NHWC"
+        "layout": "NHWC",
+        "mem_bw_gbps": 90.0,
+        "slots": 1
       },
       "npu": {
         "peak_gflops": 9000.0,
         "launch_us": 90.0,
-        "layout": "NHWC"
+        "layout": "NHWC",
+        "mem_bw_gbps": 150.0,
+        "slots": 1
       }
     },
     "fixed_cross_us": 35.0,
@@ -758,30 +788,18 @@
   "meta": {
     "weights": [
       "p_net_0_0_weight",
-      "p_net_0_1_weight",
-      "p_net_0_1_bias",
       "p_net_1_0_weight",
-      "p_net_1_1_weight",
-      "p_net_1_1_bias",
       "p_net_2_0_weight",
-      "p_net_2_1_weight",
-      "p_net_2_1_bias",
       "p_net_5_weight",
       "p_net_5_bias",
-      "b_net_0_1_running_mean",
-      "b_net_0_1_running_var",
-      "b_net_1_1_running_mean",
-      "b_net_1_1_running_var",
-      "b_net_2_1_running_mean",
-      "b_net_2_1_running_var",
       "conv2d_bias",
       "conv2d_1_bias",
       "conv2d_2_bias"
     ],
     "capture": {
       "producer": "hx-capture",
-      "captured_at": "2026-11-05 00:15:33",
-      "capture_ms": 311.39,
+      "captured_at": "2026-11-05 23:41:08",
+      "capture_ms": 297.9,
       "torch_version": "2.10.0+cu128",
       "dynamic_shapes_declared": false,
       "marker_count": 0,
@@ -813,7 +831,8 @@
       "hints": 0,
       "bn_folded": 3,
       "identity_removed": 0,
-      "silu_decomposed": 0
+      "silu_decomposed": 0,
+      "orphan_weights_removed": 12
     },
     "hard_boundaries": [],
     "hints": {},
@@ -821,11 +840,11 @@
       "selected_candidate": "search",
       "strategy": "auto",
       "search": {
-        "initial_us": 574.07,
-        "final_us": 106.06,
-        "improvement_pct": 81.53,
-        "iterations": 1800,
-        "accepted_moves": 62
+        "initial_us": 119.24,
+        "final_us": 117.24,
+        "improvement_pct": 1.68,
+        "iterations": 1567,
+        "accepted_moves": 1
       },
       "demoted_nodes": 0,
       "small_npu_parts": 0,
@@ -843,6 +862,68 @@
         "flatten": "npu",
         "linear": "npu"
       }
+    },
+    "memory": {
+      "align": 64,
+      "slot_count": 4,
+      "reusable_tensors": 7,
+      "persistent_tensors": 10,
+      "alias_tensors": [
+        "flatten"
+      ],
+      "alias_count": 1,
+      "naive_activation_bytes": 1310976,
+      "peak_activation_bytes": 786432,
+      "activation_saving_ratio": 0.4001,
+      "weights_bytes": 227880,
+      "io_persistent_bytes": 12352,
+      "naive_total_bytes": 1551208,
+      "peak_total_bytes": 1026664,
+      "slots": [
+        {
+          "id": 0,
+          "bytes": 131072,
+          "tensors": [
+            "batch_norm",
+            "adaptive_avg_pool2d"
+          ]
+        },
+        {
+          "id": 1,
+          "bytes": 131072,
+          "tensors": [
+            "relu_"
+          ]
+        },
+        {
+          "id": 2,
+          "bytes": 262144,
+          "tensors": [
+            "batch_norm_1",
+            "batch_norm_2"
+          ]
+        },
+        {
+          "id": 3,
+          "bytes": 262144,
+          "tensors": [
+            "relu__1",
+            "relu__2"
+          ]
+        }
+      ],
+      "tensor_slots": {
+        "batch_norm": 0,
+        "relu_": 1,
+        "batch_norm_1": 2,
+        "relu__1": 3,
+        "batch_norm_2": 2,
+        "relu__2": 3,
+        "adaptive_avg_pool2d": 0,
+        "flatten": 0
+      },
+      "_note": "复用条件基于依赖偏序（祖先集），在并行分支上同样安全；view 类算子为零拷贝别名，与其根张量共槽、不单独占缓冲，故 naive 只统计需要独立缓冲的张量；多帧流水时每帧独立一套 slot 池，峰值需乘以在飞帧数。",
+      "verified": true
     },
     "plan": {
       "verdict": "NOT_RECOMMENDED",
@@ -870,44 +951,46 @@
         }
       },
       "baselines_single_backend_us": {
-        "cpu": 1180.08,
-        "gpu": 228.2,
-        "npu": 106.06
+        "cpu": 1238.49,
+        "gpu": 245.34,
+        "npu": 117.24
       },
       "naive_sequential_baselines_us": {
-        "cpu": 1180.08,
-        "gpu": 228.2,
-        "npu": 106.06
+        "cpu": 1238.49,
+        "gpu": 245.34,
+        "npu": 117.24
       },
       "best_single_backend": "npu",
       "_baseline_note": "基线为单后端方案的离散事件模拟（含其自身的降级搬运），与分区方案可比",
       "bound": {
-        "baseline_single_backend_us": 106.06,
-        "naive_sequential_baseline_us": 106.06,
+        "baseline_single_backend_us": 117.24,
+        "naive_sequential_baseline_us": 117.24,
         "baseline_is_fair_simulation": true,
-        "partitioned_latency_us": 106.06,
+        "partitioned_latency_us": 117.24,
         "latency_speedup": 1.0,
-        "total_serial_compute_us": 106.06,
-        "T1_serial_partitioned_us": 106.06,
-        "Tinf_critical_path_us": 106.06,
+        "total_serial_compute_us": 117.24,
+        "T1_serial_partitioned_us": 117.24,
+        "Tinf_critical_path_us": 117.24,
         "theoretical_upper_bound_vs_baseline": 1.0,
         "intrinsic_parallelism_T1_over_Tinf": 1.0,
         "parallel_efficiency": 1.0,
         "transfer_overhead_ratio": 0.0
       },
       "simulation": {
-        "makespan_us": 106.06,
-        "steady_frame_us": 106.06,
-        "throughput_fps": 9428.98,
-        "total_compute_us": 16.06,
-        "total_transfer_us": 0,
+        "makespan_us": 117.24,
+        "steady_frame_us": 117.24,
+        "throughput_fps": 8529.76,
+        "total_compute_us": 27.24,
+        "total_transfer_us": 0.0,
+        "dma_busy_us": 0.0,
+        "transfer_edges": 0,
         "total_launch_us": 90.0,
-        "critical_path_us": 106.06,
+        "critical_path_us": 117.24,
         "overlap_pairs": 0,
         "backend_busy_us": {
           "cpu": 0.0,
           "gpu": 0.0,
-          "npu": 106.06
+          "npu": 117.24
         },
         "utilization": {
           "cpu": 0.0,
@@ -924,16 +1007,79 @@
       "pipeline": {
         "pipeline_depth": 2,
         "bottleneck_backend": "npu",
-        "steady_frame_us": 106.06,
-        "steady_fps": 9428.98,
-        "single_frame_latency_us": 106.06,
-        "no_pipeline_fps": 9428.98,
-        "ideal_balanced_fps": 28286.93,
+        "steady_frame_us": 117.24,
+        "steady_fps": 8529.76,
+        "single_frame_latency_us": 117.24,
+        "no_pipeline_fps": 8529.76,
+        "ideal_balanced_fps": 25589.27,
         "note": "跨帧流水让不同帧占用不同后端，提高吞吐但不降低单帧延迟"
       },
+      "memory": {
+        "align": 64,
+        "slot_count": 4,
+        "reusable_tensors": 7,
+        "persistent_tensors": 10,
+        "alias_tensors": [
+          "flatten"
+        ],
+        "alias_count": 1,
+        "naive_activation_bytes": 1310976,
+        "peak_activation_bytes": 786432,
+        "activation_saving_ratio": 0.4001,
+        "weights_bytes": 227880,
+        "io_persistent_bytes": 12352,
+        "naive_total_bytes": 1551208,
+        "peak_total_bytes": 1026664,
+        "slots": [
+          {
+            "id": 0,
+            "bytes": 131072,
+            "tensors": [
+              "batch_norm",
+              "adaptive_avg_pool2d"
+            ]
+          },
+          {
+            "id": 1,
+            "bytes": 131072,
+            "tensors": [
+              "relu_"
+            ]
+          },
+          {
+            "id": 2,
+            "bytes": 262144,
+            "tensors": [
+              "batch_norm_1",
+              "batch_norm_2"
+            ]
+          },
+          {
+            "id": 3,
+            "bytes": 262144,
+            "tensors": [
+              "relu__1",
+              "relu__2"
+            ]
+          }
+        ],
+        "tensor_slots": {
+          "batch_norm": 0,
+          "relu_": 1,
+          "batch_norm_1": 2,
+          "relu__1": 3,
+          "batch_norm_2": 2,
+          "relu__2": 3,
+          "adaptive_avg_pool2d": 0,
+          "flatten": 0
+        },
+        "_note": "复用条件基于依赖偏序（祖先集），在并行分支上同样安全；view 类算子为零拷贝别名，与其根张量共槽、不单独占缓冲，故 naive 只统计需要独立缓冲的张量；多帧流水时每帧独立一套 slot 池，峰值需乘以在飞帧数。",
+        "verified": true
+      },
       "cost_breakdown": {
-        "compute_us": 16.06,
-        "transfer_us": 0,
+        "compute_us": 27.24,
+        "transfer_us": 0.0,
+        "dma_busy_us": 0.0,
         "launch_us": 90.0,
         "resource_idle_us": 0.0
       },
@@ -951,17 +1097,23 @@
         "cpu": {
           "peak_gflops": 180.0,
           "launch_us": 12.0,
-          "layout": "NCHW"
+          "layout": "NCHW",
+          "mem_bw_gbps": 25.0,
+          "slots": 1
         },
         "gpu": {
           "peak_gflops": 1400.0,
           "launch_us": 45.0,
-          "layout": "NHWC"
+          "layout": "NHWC",
+          "mem_bw_gbps": 90.0,
+          "slots": 1
         },
         "npu": {
           "peak_gflops": 9000.0,
           "launch_us": 90.0,
-          "layout": "NHWC"
+          "layout": "NHWC",
+          "mem_bw_gbps": 150.0,
+          "slots": 1
         }
       },
       "fixed_cross_us": 35.0,
@@ -978,7 +1130,7 @@
       }
     },
     "strategy": "auto",
-    "weights_bytes": 230464,
+    "weights_bytes": 227904,
     "weights_file": "weights.bin"
   }
 }

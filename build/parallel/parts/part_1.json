@@ -3,22 +3,60 @@
     "id": 1,
     "backend": "cpu",
     "nodes": [
+      "adaptive_avg_pool2d_1",
+      "flatten_1",
       "linear_1",
       "silu_2"
     ],
     "inputs": [
-      "flatten_1"
+      "silu_1"
     ],
     "outputs": [
       "silu_2"
     ],
-    "est_us": 12.052,
+    "est_us": 17.632,
     "artifact": "",
     "compile_flags": {
       "target": "cpu"
     }
   },
   "nodes": [
+    {
+      "id": "adaptive_avg_pool2d_1",
+      "op": "global_avg_pool",
+      "inputs": [
+        "silu_1"
+      ],
+      "outputs": [
+        "adaptive_avg_pool2d_1"
+      ],
+      "attrs": {},
+      "flops": 65536,
+      "io_bytes": 131200,
+      "part": 1,
+      "backend": "cpu",
+      "name": "adaptive_avg_pool2d_1",
+      "hint": "gpu"
+    },
+    {
+      "id": "flatten_1",
+      "op": "flatten",
+      "inputs": [
+        "adaptive_avg_pool2d_1"
+      ],
+      "outputs": [
+        "flatten_1"
+      ],
+      "attrs": {
+        "start_dim": 1
+      },
+      "flops": 0,
+      "io_bytes": 256,
+      "part": 1,
+      "backend": "cpu",
+      "name": "flatten_1",
+      "hint": "gpu"
+    },
     {
       "id": "linear_1",
       "op": "linear",
@@ -32,6 +70,7 @@
       ],
       "attrs": {},
       "flops": 4160,
+      "io_bytes": 8832,
       "part": 1,
       "backend": "cpu",
       "name": "linear_1",
@@ -48,6 +87,7 @@
       ],
       "attrs": {},
       "flops": 384,
+      "io_bytes": 512,
       "part": 1,
       "backend": "cpu",
       "name": "silu_2",
@@ -55,6 +95,36 @@
     }
   ],
   "tensors": {
+    "silu_1": {
+      "id": "silu_1",
+      "dtype": "f32",
+      "shape": [
+        1,
+        32,
+        32,
+        32
+      ],
+      "kind": "activation",
+      "offset": -1,
+      "bytes": 131072,
+      "producer": "silu_1",
+      "slot": 2
+    },
+    "adaptive_avg_pool2d_1": {
+      "id": "adaptive_avg_pool2d_1",
+      "dtype": "f32",
+      "shape": [
+        1,
+        32,
+        1,
+        1
+      ],
+      "kind": "activation",
+      "offset": -1,
+      "bytes": 128,
+      "producer": "adaptive_avg_pool2d_1",
+      "slot": 0
+    },
     "flatten_1": {
       "id": "flatten_1",
       "dtype": "f32",
@@ -65,7 +135,8 @@
       "kind": "activation",
       "offset": -1,
       "bytes": 128,
-      "producer": "flatten_1"
+      "producer": "flatten_1",
+      "slot": 0
     },
     "p_branch_b_6_weight": {
       "id": "p_branch_b_6_weight",
@@ -75,9 +146,10 @@
         32
       ],
       "kind": "weight",
-      "offset": 316544,
+      "offset": 315264,
       "bytes": 8192,
-      "producer": ""
+      "producer": "",
+      "slot": -1
     },
     "p_branch_b_6_bias": {
       "id": "p_branch_b_6_bias",
@@ -86,9 +158,10 @@
         64
       ],
       "kind": "weight",
-      "offset": 324736,
+      "offset": 323456,
       "bytes": 256,
-      "producer": ""
+      "producer": "",
+      "slot": -1
     },
     "linear_1": {
       "id": "linear_1",
@@ -100,7 +173,8 @@
       "kind": "activation",
       "offset": -1,
       "bytes": 256,
-      "producer": "linear_1"
+      "producer": "linear_1",
+      "slot": 2
     },
     "silu_2": {
       "id": "silu_2",
@@ -112,7 +186,8 @@
       "kind": "activation",
       "offset": -1,
       "bytes": 256,
-      "producer": "silu_2"
+      "producer": "silu_2",
+      "slot": 0
     }
   },
   "target": "cpu",

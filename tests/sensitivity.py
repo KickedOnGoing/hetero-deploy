@@ -96,6 +96,10 @@ def fixed_assignment(g0) -> tuple[dict[str, str], dict[str, Any]]:
     cfg = PartitionConfig(strategy="force_hetero", respect_hints=False,
                           iters=300, restarts=3, seed=7)
     partition(g, cm, cfg)
+    # 保留 force_hetero 的原始切分（含一支 CPU、4 parts、真实 overlap）。
+    # 它天然 S<1：这正是「强制异构无收益窗口、auto 会拒绝它」的证据，
+    # 与比例扫描里 auto 给出 2.3~2.6× 形成对照。曲线只用来观察
+    # 「开销增大 S 降 / 规模放大 S 单调趋近上界」这两个单调性。
     assign = {n.id: n.backend for n in g.nodes}
     return assign, chip
 
@@ -227,8 +231,8 @@ def main() -> int:
     print(f"base graph: {len(g0.nodes)} nodes, "
           f"total FLOPs={sum(n.flops for n in g0.nodes):,}")
     assign, chip_ref = fixed_assignment(g0)
-    print(f"fixed partition (force_hetero): {len({assign[n.id] for n in g0.nodes})} "
-          f"backends, parts={len(set(assign.values())) if False else 'see below'}")
+    print(f"fixed partition (force_hetero): "
+          f"backends={sorted(set(assign.values()))}, nodes={len(assign)}")
 
     rr = sweep_ratio(g0)
     ro = sweep_overhead(g0, assign, chip_ref)
@@ -254,15 +258,21 @@ def main() -> int:
               f"bound={r['upper_bound']:5.2f}  parts={r['parts']:2d}  "
               f"overlap={r['overlap']}")
 
-    crit = min((r["ratio_npu_over_gpu"] for r in rr if r["speedup"] >= 1.0), default=None)
-    # 开销扫描：S 跌破 1 的临界开销
+    hetero = [r["ratio_npu_over_gpu"] for r in rr
+              if r["parts"] > 1 and r["backends"] >= 2]
     ov_below = [r["fixed_cross_us"] for r in ro if r["speedup"] < 1.0]
     summary = {
-        "critical_ratio_for_positive_gain": crit,
-        "ratio_note": "auto: when NPU is >= ~1.5x GPU, splitting to GPU stops paying off",
-        "scale_threshold_x": next((r["flops_scale"] for r in rs if r["speedup"] >= 1.15), None),
-        "fixed_overhead_knee_us": next((r["fixed_cross_us"] for r in ov_below), None),
-        "fixed_overhead_note": "fixed partition: S falls as overhead rises; knee where S<1",
+        "auto_hetero_ratio_window": [min(hetero), max(hetero)] if hetero else None,
+        "max_auto_speedup": max(r["speedup"] for r in rr),
+        "ratio_note": "auto 决策：某一后端明显更强时收敛到单后端整图，吞吐接近时才拆分并行；"
+                      "曲线非单调源于启发式搜索在不同配置下的策略跳变",
+        "scale_speedup_range": [rs[0]["speedup"], rs[-1]["speedup"]],
+        "scale_threshold_x": next((r["flops_scale"] for r in rs if r["speedup"] >= 1.0), None),
+        "scale_note": "固定切分含 CPU 分支，S 始终 <1（自动分区会拒绝它）；"
+                      "但随规模放大搬运被摊薄，S 单调趋近该切分的理论上界",
+        "fixed_overhead_knee_us": next(iter(ov_below), None),
+        "fixed_overhead_note": "固定切分：S 随跨片固定开销单调下降；"
+                              "knee 为 S 跌破 1 的开销（本切分在 0us 时已 <1）",
     }
     with open(os.path.join(OUT, "summary.json"), "w", encoding="utf-8") as f:
         json.dump({"summary": summary, "ratio": rr, "overhead": ro, "scale": rs},

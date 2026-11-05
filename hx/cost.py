@@ -1,12 +1,17 @@
 """代价模型与离散事件模拟器。
 
 这是"可实现性"的定量核心：任何分区方案在生成之前，都先在这里被
-离散事件模拟评估一次。模拟器显式建模了三件事：
+离散事件模拟评估一次。模拟器显式建模了四件事：
 
-1. 每个后端是**独占串行资源**（一个 NPU 同时只能执行一个子图）；
-2. 跨后端边产生**搬运 + 同步**开销，占用 DMA 资源；
-3. 同后端的独立分支**无法并行**，因此把两个分支都放到最快的 NPU
-   并不会带来并行收益 —— 这一点直接决定了分区搜索的目标函数。
+1. 每个后端是**独占串行资源**（可由 chip 的 slots 配置多个执行槽）；
+2. 跨后端边产生**搬运 + 同步**开销，占用一条串行 DMA 队列；
+3. 同后端的独立分支**无法并行**（除非 slots>1），因此把两个分支都放到最快的
+   NPU 并不会带来并行收益 —— 这直接决定分区搜索的目标函数；
+4. 算子耗时取 **算力下界与访存下界的最大值**（roofline）：element-wise / view
+   类算子 FLOPs≈0 但依然要读写内存，估成 0 会让分区器凭空制造 NPU 碎片。
+
+确定性保证：所有遍历均排序，不依赖 set/dict 的迭代顺序；同一分区方案
+重复 simulate 必须得到逐位相同的结果（见 tests/test_core.py）。
 
 所有时间单位为微秒 (us)。
 """
@@ -29,6 +34,7 @@ class SimEvent:
     launch_us: float
     compute_us: float
     kind: str = "compute"       # compute | transfer
+    slot: int = 0               # 占用的执行槽
 
 
 @dc.dataclass
@@ -39,10 +45,12 @@ class SimResult:
     total_compute_us: float
     total_transfer_us: float
     total_launch_us: float
-    steady_frame_us: float       # 深流水下的稳态帧间隔（瓶颈后端）
+    steady_frame_us: float       # 深流水下的稳态帧间隔（瓶颈串行资源）
     critical_path_us: float
     utilization: dict[str, float]
     overlap_pairs: int = 0       # 不同后端在时间上真正重叠的 Part 对数
+    dma_busy_us: float = 0.0     # DMA 队列被占用的总时长
+    transfer_edges: int = 0      # 参与模拟的跨 part 数据边条数
 
     @property
     def throughput_fps(self) -> float:
@@ -55,6 +63,8 @@ class SimResult:
             "throughput_fps": round(self.throughput_fps, 2),
             "total_compute_us": round(self.total_compute_us, 2),
             "total_transfer_us": round(self.total_transfer_us, 2),
+            "dma_busy_us": round(self.dma_busy_us, 2),
+            "transfer_edges": self.transfer_edges,
             "total_launch_us": round(self.total_launch_us, 2),
             "critical_path_us": round(self.critical_path_us, 2),
             "overlap_pairs": self.overlap_pairs,
@@ -70,21 +80,31 @@ class CostModel:
         self.chip = chip
         self.be = chip["backends"]
 
+    def slots(self, backend: str) -> int:
+        """该后端可并发的执行槽数（对应 chip.backends[b].slots / backend_slots）。"""
+        if "slots" in self.be.get(backend, {}):
+            return max(1, int(self.be[backend]["slots"]))
+        return max(1, int(self.chip.get("backend_slots", {}).get(backend, 1)))
+
     def compute_us(self, node: Node, backend: str) -> float:
-        """单算子纯计算时间（不含提交开销）。"""
+        """单算子纯计算时间（不含提交开销）= max(算力下界, 访存下界)。"""
         eff = efficiency(node.op, backend)
         if eff <= 0:
             return float("inf")
         peak = float(self.be[backend]["peak_gflops"]) * 1e9
-        # flops / (peak * eff) 秒 -> 微秒
-        t = node.flops / (peak * eff) * 1e6
-        # 访存下限：小张量受带宽约束而非算力约束
-        return max(t, self.memory_floor_us(node, backend))
+        t_flops = node.flops / (peak * eff) * 1e6 if peak > 0 else 0.0
+        return max(t_flops, self.memory_floor_us(node, backend))
 
     def memory_floor_us(self, node: Node, backend: str) -> float:
-        """算子读写量 / 有效带宽给出的时间下界，防止小算子被估成 0。"""
-        bw = 55.0 * 1e9  # bytes/s，与 per_mb_us 一致
-        return 0.0  # 由调用方的 launch_us 覆盖；保留接口供校准
+        """roofline 访存下界：读写字节 / 片内有效带宽。
+
+        node.io_bytes 在 lower 阶段由 estimate_io_bytes 计算（输入+输出+权重）。
+        带宽缺省 55 GB/s，与跨片 per_mb_us 的假设一致。
+        """
+        bw = float(self.be[backend].get("mem_bw_gbps", 55.0)) * 1e9
+        if bw <= 0 or node.io_bytes <= 0:
+            return 0.0
+        return node.io_bytes / bw * 1e6
 
     def launch_us(self, backend: str) -> float:
         return float(self.be[backend].get("launch_us", 0.0))
@@ -115,10 +135,33 @@ class CostModel:
         return t + self.launch_us(backend)
 
 
+def _part_topo(parts: dict[int, Part], deps: dict[int, set[int]]) -> list[int]:
+    """子图商图的**确定性**拓扑序（固定取最小可用 id），不依赖 set 迭代顺序。"""
+    indeg = {pid: len(deps[pid]) for pid in parts}
+    succ: dict[int, list[int]] = {pid: [] for pid in parts}
+    for pid, ps in deps.items():
+        for q in sorted(ps):
+            if q in succ:
+                succ[q].append(pid)
+    ready = sorted(pid for pid, d in indeg.items() if d == 0)
+    out: list[int] = []
+    while ready:
+        u = ready.pop(0)
+        out.append(u)
+        for v in sorted(succ[u]):
+            indeg[v] -= 1
+            if indeg[v] == 0:
+                ready.append(v)
+                ready.sort()
+    if len(out) != len(parts):
+        raise ValueError("子图商图存在环，无法模拟")
+    return out
+
+
 def simulate(g: Graph, cm: CostModel) -> SimResult:
     """对已分区的图做离散事件模拟，返回 makespan / 时间线 / 利用率。
 
-    资源模型：每个后端一条串行队列；DMA 一条串行队列。
+    资源模型：每个后端 slots 条串行队列；DMA 一条串行队列。
     任务单位 = Part（一次提交一个已编译子图）。
     """
     parts = {p.id: p for p in g.parts}
@@ -126,15 +169,15 @@ def simulate(g: Graph, cm: CostModel) -> SimResult:
         return SimResult(0.0, [], {b: 0.0 for b in BACKENDS}, 0.0, 0.0, 0.0,
                          0.0, 0.0, {b: 0.0 for b in BACKENDS})
 
-    # part 级依赖与边延迟
-    deps: dict[int, set[int]] = {p.id: set() for p in g.parts}
-    edge_delay: dict[tuple[int, int], float] = {}
+    # part 级依赖与**逐张量**入边（不再按 (src,dst) 取 max，避免低估搬运）
+    deps: dict[int, set[int]] = {pid: set() for pid in parts}
+    in_edges: dict[int, list[tuple[int, str, float, bool]]] = {pid: [] for pid in parts}
     for e in g.edges:
-        if e.src == e.dst:
+        if e.src == e.dst or e.src not in parts or e.dst not in parts:
             continue
         deps[e.dst].add(e.src)
-        key = (e.src, e.dst)
-        edge_delay[key] = max(edge_delay.get(key, 0.0), cm.edge_cost(e))
+        cross = e.src_backend != e.dst_backend
+        in_edges[e.dst].append((e.src, e.tensor, cm.edge_cost(e), cross))
 
     # part 计算时间
     comp: dict[int, float] = {}
@@ -150,58 +193,83 @@ def simulate(g: Graph, cm: CostModel) -> SimResult:
         comp[p.id] = c
         launch[p.id] = cm.launch_us(p.backend)
 
-    # part 拓扑序（按节点全局拓扑序的最小位置排序，更稳定）
-    order = {nid: i for i, nid in enumerate(g.topo())}
-    porder = sorted(parts, key=lambda pid: min(order[x] for x in parts[pid].nodes))
+    porder = _part_topo(parts, deps)
 
-    backend_free = {b: 0.0 for b in BACKENDS}
-    dma_free = 0.0
+    backend_free: dict[str, list[float]] = {
+        b: [0.0] * cm.slots(b) for b in BACKENDS}
+    dma_free = [0.0]
     finish: dict[int, float] = {}
     events: list[SimEvent] = []
     backend_busy = {b: 0.0 for b in BACKENDS}
+    dma_busy = 0.0
+    total_transfer = 0.0
+    transfer_edges = 0
 
     for pid in porder:
         p = parts[pid]
         b = p.backend
-        # 依赖就绪时间：前驱完成 + 跨后端搬运（占用 DMA）
+        # 依赖就绪时间。跨片边按**前驱实际完成时刻**排序后依次占用 DMA，
+        # 保证物理因果与结果确定性（旧实现按 set 顺序排队，结果会漂移）。
+        pending = sorted(in_edges[pid], key=lambda x: (finish.get(x[0], 0.0), x[0], x[1]))
         ready = 0.0
-        for q in deps[pid]:
-            d = edge_delay.get((q, pid), 0.0)
-            if d > 0:
-                dma_start = max(finish[q], dma_free)
-                dma_free = dma_start + d
-                arrival = dma_free
+        for q, _tensor, cost, cross in pending:
+            q_done = finish.get(q, 0.0)
+            if cross and cost > 0:
+                di = min(range(len(dma_free)), key=lambda k: dma_free[k])
+                dma_start = max(q_done, dma_free[di])
+                dma_end = dma_start + cost
+                dma_free[di] = dma_end
+                dma_busy += cost
+                total_transfer += cost
+                transfer_edges += 1
+                arrival = dma_end
+            elif cost > 0:
+                # 同后端 part 之间只有 fence 同步，不占 DMA
+                total_transfer += cost
+                arrival = q_done + cost
             else:
-                arrival = finish[q] + d
+                arrival = q_done
             ready = max(ready, arrival)
-        start = max(ready, backend_free[b])
+
+        si = min(range(len(backend_free[b])), key=lambda k: backend_free[b][k])
+        start = max(ready, backend_free[b][si])
         end = start + launch[pid] + comp[pid]
-        backend_free[b] = end
+        backend_free[b][si] = end
         finish[pid] = end
         backend_busy[b] += launch[pid] + comp[pid]
-        events.append(SimEvent(pid, b, start, end, launch[pid], comp[pid]))
+        events.append(SimEvent(pid, b, start, end, launch[pid], comp[pid], slot=si))
 
     makespan = max(finish.values()) if finish else 0.0
-    # 稳态帧间隔：流水足够深时由最忙后端决定
-    steady = max(backend_busy.values()) if backend_busy else 0.0
-    # 关键路径：只算计算+launch 的最长链（不含资源竞争），作为加速上界参考
+    # 稳态帧间隔：深流水下由最忙的串行资源决定；多槽后端按槽数均摊，DMA 也参与竞争
+    steady = max(
+        [backend_busy[b] / cm.slots(b) for b in BACKENDS] + [dma_busy / len(dma_free)]
+    )
+
+    # 关键路径：无限资源下的最短完成时间（含跨片搬运），作为加速上界参考
+    edge_max: dict[tuple[int, int], float] = {}
+    for pid in porder:
+        for q, _t, cost, _c in in_edges[pid]:
+            key = (q, pid)
+            edge_max[key] = max(edge_max.get(key, 0.0), cost)
     cp: dict[int, float] = {}
     for pid in porder:
-        base = max((cp[q] + edge_delay.get((q, pid), 0.0) for q in deps[pid]), default=0.0)
+        base = max((cp[q] + edge_max.get((q, pid), 0.0) for q in sorted(deps[pid])),
+                   default=0.0)
         cp[pid] = base + launch[pid] + comp[pid]
     critical = max(cp.values()) if cp else 0.0
 
-    total_transfer = sum(edge_delay.values())
     total_compute = sum(comp.values())
     total_launch = sum(launch.values())
-    util = {b: (backend_busy[b] / makespan if makespan > 0 else 0.0) for b in BACKENDS}
+    util = {b: (backend_busy[b] / (makespan * cm.slots(b)) if makespan > 0 else 0.0)
+            for b in BACKENDS}
     overlap = 0
     for i, a in enumerate(events):
-        for b in events[i + 1:]:
-            if a.backend != b.backend and a.start_us < b.end_us and b.start_us < a.end_us:
+        for bb in events[i + 1:]:
+            if a.backend != bb.backend and a.start_us < bb.end_us and bb.start_us < a.end_us:
                 overlap += 1
     return SimResult(makespan, events, backend_busy, total_compute,
-                     total_transfer, total_launch, steady, critical, util, overlap)
+                     total_transfer, total_launch, steady, critical, util,
+                     overlap, dma_busy, transfer_edges)
 
 
 def speedup_bound(g: Graph, cm: CostModel, res: SimResult,

@@ -17,7 +17,7 @@
     "outputs": [
       "silu_2"
     ],
-    "est_us": 318.329,
+    "est_us": 380.746,
     "artifact": "",
     "compile_flags": {
       "target": "gpu"
@@ -35,6 +35,7 @@
       ],
       "attrs": {},
       "flops": 1769472,
+      "io_bytes": 2359296,
       "part": 1,
       "backend": "gpu",
       "name": "silu",
@@ -67,6 +68,7 @@
         "groups": 1
       },
       "flops": 170164224,
+      "io_bytes": 2396288,
       "part": 1,
       "backend": "gpu",
       "name": "conv2d_4",
@@ -83,6 +85,7 @@
       ],
       "attrs": {},
       "flops": 1769472,
+      "io_bytes": 2359296,
       "part": 1,
       "backend": "gpu",
       "name": "silu_1",
@@ -99,6 +102,7 @@
       ],
       "attrs": {},
       "flops": 589824,
+      "io_bytes": 1179776,
       "part": 1,
       "backend": "gpu",
       "name": "adaptive_avg_pool2d_1",
@@ -117,6 +121,7 @@
         "start_dim": 1
       },
       "flops": 0,
+      "io_bytes": 256,
       "part": 1,
       "backend": "gpu",
       "name": "flatten_1",
@@ -135,6 +140,7 @@
       ],
       "attrs": {},
       "flops": 4160,
+      "io_bytes": 8832,
       "part": 1,
       "backend": "gpu",
       "name": "linear_1",
@@ -151,6 +157,7 @@
       ],
       "attrs": {},
       "flops": 384,
+      "io_bytes": 512,
       "part": 1,
       "backend": "gpu",
       "name": "silu_2",
@@ -170,7 +177,8 @@
       "kind": "activation",
       "offset": -1,
       "bytes": 1179648,
-      "producer": "conv2d_3"
+      "producer": "conv2d_3",
+      "slot": 0
     },
     "silu": {
       "id": "silu",
@@ -184,7 +192,8 @@
       "kind": "activation",
       "offset": -1,
       "bytes": 1179648,
-      "producer": "silu"
+      "producer": "silu",
+      "slot": 2
     },
     "p_branch_b_2_weight": {
       "id": "p_branch_b_2_weight",
@@ -196,9 +205,10 @@
         3
       ],
       "kind": "weight",
-      "offset": 279552,
+      "offset": 278272,
       "bytes": 36864,
-      "producer": ""
+      "producer": "",
+      "slot": -1
     },
     "p_branch_b_2_bias": {
       "id": "p_branch_b_2_bias",
@@ -207,9 +217,10 @@
         32
       ],
       "kind": "weight",
-      "offset": 316416,
+      "offset": 315136,
       "bytes": 128,
-      "producer": ""
+      "producer": "",
+      "slot": -1
     },
     "conv2d_4": {
       "id": "conv2d_4",
@@ -223,7 +234,8 @@
       "kind": "activation",
       "offset": -1,
       "bytes": 1179648,
-      "producer": "conv2d_4"
+      "producer": "conv2d_4",
+      "slot": 0
     },
     "silu_1": {
       "id": "silu_1",
@@ -237,7 +249,8 @@
       "kind": "activation",
       "offset": -1,
       "bytes": 1179648,
-      "producer": "silu_1"
+      "producer": "silu_1",
+      "slot": 2
     },
     "adaptive_avg_pool2d_1": {
       "id": "adaptive_avg_pool2d_1",
@@ -251,7 +264,8 @@
       "kind": "activation",
       "offset": -1,
       "bytes": 128,
-      "producer": "adaptive_avg_pool2d_1"
+      "producer": "adaptive_avg_pool2d_1",
+      "slot": 0
     },
     "flatten_1": {
       "id": "flatten_1",
@@ -263,7 +277,8 @@
       "kind": "activation",
       "offset": -1,
       "bytes": 128,
-      "producer": "flatten_1"
+      "producer": "flatten_1",
+      "slot": 0
     },
     "p_branch_b_6_weight": {
       "id": "p_branch_b_6_weight",
@@ -273,9 +288,10 @@
         32
       ],
       "kind": "weight",
-      "offset": 316544,
+      "offset": 315264,
       "bytes": 8192,
-      "producer": ""
+      "producer": "",
+      "slot": -1
     },
     "p_branch_b_6_bias": {
       "id": "p_branch_b_6_bias",
@@ -284,9 +300,10 @@
         64
       ],
       "kind": "weight",
-      "offset": 324736,
+      "offset": 323456,
       "bytes": 256,
-      "producer": ""
+      "producer": "",
+      "slot": -1
     },
     "linear_1": {
       "id": "linear_1",
@@ -298,7 +315,8 @@
       "kind": "activation",
       "offset": -1,
       "bytes": 256,
-      "producer": "linear_1"
+      "producer": "linear_1",
+      "slot": 2
     },
     "silu_2": {
       "id": "silu_2",
@@ -310,7 +328,8 @@
       "kind": "activation",
       "offset": -1,
       "bytes": 256,
-      "producer": "silu_2"
+      "producer": "silu_2",
+      "slot": 0
     }
   },
   "target": "gpu",

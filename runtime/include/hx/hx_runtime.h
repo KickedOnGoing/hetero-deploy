@@ -51,6 +51,14 @@ struct RunReport {
     size_t completed_parts = 0;
     double backend_busy_us[3] = {0.0, 0.0, 0.0};
     int overlap_pairs = 0;          // 不同后端在时间上重叠的 Part 对数
+    // 内存：按 manifest.memory 的 slot 规划共享缓冲后的实测峰值（单帧）
+    size_t slot_count = 0;
+    size_t naive_activation_bytes = 0;
+    size_t peak_activation_bytes = 0;
+    double buffer_reuse_ratio = 0.0;
+    size_t frames_in_flight = 0;
+    size_t inflight_peak_bytes = 0;  // 单帧峰值 × 同时在飞帧数
+    size_t runtime_allocated_bytes = 0;  // 实测：单帧实际分配（含常驻 IO）
     std::vector<PartTiming> timeline;
 
     std::string gantt() const;

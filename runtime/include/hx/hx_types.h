@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <memory>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 #include "json.hpp"
@@ -57,6 +58,7 @@ struct TensorDesc {
     int64_t offset = -1;        // weights.bin 字节偏移
     size_t bytes = 0;
     std::string producer;
+    int slot = -1;                  // 共享缓冲槽；-1 = 常驻/独占
 
     size_t numel() const {
         if (shape.empty()) return 0;
@@ -108,17 +110,32 @@ struct Model {
     std::vector<std::string> outputs;
     std::string weights_file;
     size_t weights_bytes = 0;
+    // 编译期内存规划（manifest.memory）：按 slot 共享缓冲，避免 O(全图激活) 峰值
+    std::vector<size_t> slot_bytes;
+    size_t memory_naive_bytes = 0;
+    size_t memory_peak_bytes = 0;
     JValue plan;
     JValue chip;
     JValue raw;
 
+    // O(1) 索引：算子执行时 get(tensor)/node() 是热点，线性查找会放大开销
+    std::unordered_map<std::string, size_t> tensor_idx;
+    std::unordered_map<std::string, size_t> node_idx;
+
+    void build_index() {
+        tensor_idx.clear();
+        node_idx.clear();
+        for (size_t i = 0; i < tensors.size(); ++i) tensor_idx[tensors[i].id] = i;
+        for (size_t i = 0; i < nodes.size(); ++i) node_idx[nodes[i].id] = i;
+    }
+
     const TensorDesc* tensor(const std::string& id) const {
-        for (const auto& t : tensors) if (t.id == id) return &t;
-        return nullptr;
+        auto it = tensor_idx.find(id);
+        return it == tensor_idx.end() ? nullptr : &tensors[it->second];
     }
     const NodeDesc* node(const std::string& id) const {
-        for (const auto& n : nodes) if (n.id == id) return &n;
-        return nullptr;
+        auto it = node_idx.find(id);
+        return it == node_idx.end() ? nullptr : &nodes[it->second];
     }
 };
 

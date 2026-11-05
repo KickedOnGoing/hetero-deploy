@@ -1,6 +1,6 @@
 {
   "verdict": "NOT_RECOMMENDED",
-  "reason": "模拟加速比 0.43× < 1：跨片搬运/同步/提交开销超过了并行收益。建议减少分区数或改用单一后端。",
+  "reason": "模拟加速比 0.57× < 1：跨片搬运/同步/提交开销超过了并行收益。建议减少分区数或改用单一后端。",
   "nodes": 23,
   "parts": 4,
   "backends": [
@@ -8,15 +8,15 @@
     "gpu"
   ],
   "cross_backend_edges": 2,
-  "latency_us": 296.41,
+  "latency_us": 266.67,
   "baseline_us": {
-    "cpu": 1761.35,
-    "gpu": 126.2,
-    "npu": 1031.54
+    "cpu": 1842.35,
+    "gpu": 152.12,
+    "npu": 1049.57
   },
-  "speedup": 0.4258,
-  "theoretical_upper_bound": 0.5228,
-  "steady_fps": 5841.29,
+  "speedup": 0.5705,
+  "theoretical_upper_bound": 0.5705,
+  "steady_fps": 5124.66,
   "parallel_execution": true,
   "overlap_pairs": 1,
   "numerics_pass": true,

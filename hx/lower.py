@@ -13,7 +13,7 @@ import torch
 
 from .capture import CaptureResult, TORCH_DTYPE_MAP
 from .ir import Graph, Node, Tensor
-from .opset import estimate_flops
+from .opset import estimate_flops, estimate_io_bytes
 
 # ---------------------------------------------------------------------------
 # ATen -> HX IR 映射
@@ -87,6 +87,7 @@ class Lowerer:
         self.stats: dict[str, int] = {
             "aten_nodes": 0, "unsupported": 0, "hints": 0,
             "bn_folded": 0, "identity_removed": 0, "silu_decomposed": 0,
+            "orphan_weights_removed": 0,
         }
 
     # ---------------- 张量工具 ----------------
@@ -182,9 +183,10 @@ class Lowerer:
             self._decompose_silu()
         self._propagate_hints_backward()
 
-        # 5) 计算 FLOPs + 收集 hint 元数据
+        # 5) 计算 FLOPs 与访存量（roofline 双下界）+ 收集 hint 元数据
         for node in self.g.nodes:
             node.flops = estimate_flops(node, self.g)
+            node.io_bytes = estimate_io_bytes(node, self.g)
         self.g.meta["capture"] = self.cap.meta
         self.g.meta["lower_stats"] = dict(self.stats)
         self.g.meta["hard_boundaries"] = sorted(self.boundaries)
@@ -231,7 +233,7 @@ class Lowerer:
         if isinstance(val, (tuple, list)):
             out_ids = [self._tid(n.name, i) for i in range(len(val))]
             for oid, v in zip(out_ids, val):
-                self._mk_tensor(oid, v, "activation", producer=n.id if False else n.name)
+                self._mk_tensor(oid, v, "activation", producer=n.name)
             self.env[n.name] = out_ids
         else:
             out_ids = [self._tid(n.name, 0)]
@@ -413,6 +415,17 @@ class Lowerer:
             self.stats["bn_folded"] += 1
         if remove:
             g.nodes = [n for n in g.nodes if n.id not in remove]
+            # BN 折叠后 gamma/beta/mean/var 不再被任何节点引用，若不清理会
+            # 继续被打进 weights.bin 并计入常驻内存（多分支网络里相当可观）。
+            used = {t for n in g.nodes for t in n.inputs}
+            weights = g.meta.get("weights", [])
+            drop = [t for t in weights
+                    if t not in used and t not in g.inputs and t not in g.outputs]
+            for t in drop:
+                g.tensors.pop(t, None)
+            if drop:
+                g.meta["weights"] = [t for t in weights if t not in drop]
+                self.stats["orphan_weights_removed"] += len(drop)
 
     def _eliminate_identity(self) -> None:
         """消除 clone / alias / to_copy 等无计算节点，保持张量 id 不变。"""

@@ -66,9 +66,13 @@ DEFAULT_CHIP: dict[str, Any] = {
     "name": "Dimensity-9300-class (可配置模板)",
     "backends": {
         # peak_gflops: 该后端 fp16 等效峰值；launch_us: 一次提交固定开销
-        "cpu": {"peak_gflops": 180.0, "launch_us": 12.0, "layout": "NCHW"},
-        "gpu": {"peak_gflops": 1400.0, "launch_us": 45.0, "layout": "NHWC"},
-        "npu": {"peak_gflops": 9000.0, "launch_us": 90.0, "layout": "NHWC"},
+        # mem_bw_gbps: 片内有效访存带宽，用于 roofline 访存下限（小算子不被估成 0）
+        "cpu": {"peak_gflops": 180.0, "launch_us": 12.0, "layout": "NCHW",
+                "mem_bw_gbps": 25.0, "slots": 1},
+        "gpu": {"peak_gflops": 1400.0, "launch_us": 45.0, "layout": "NHWC",
+                "mem_bw_gbps": 90.0, "slots": 1},
+        "npu": {"peak_gflops": 9000.0, "launch_us": 90.0, "layout": "NHWC",
+                "mem_bw_gbps": 150.0, "slots": 1},
     },
     # 跨后端搬运：固定同步开销 + 每 MB 传输（有效带宽 ≈ 55 GB/s）+ layout 转换
     "fixed_cross_us": 35.0,
@@ -131,6 +135,21 @@ def estimate_flops(node: Node, g: Graph) -> int:
               "identity", "pad", "upsample"):
         return 0
     return outn * 2
+
+
+def estimate_io_bytes(node: Node, g: Graph) -> int:
+    """算子的最小访存量（输入 + 输出 + 权重，字节）。
+
+    用于 roofline 的访存下限：element-wise / view 类算子 FLOPs 很低甚至为 0，
+    若只按算力估时会得到 0 us，分区器会误以为"放哪都一样"，进而把小算子
+    随意铺到 NPU 上制造碎片。真实硬件上这些算子受带宽约束，必须显式建模。
+    """
+    total = 0
+    for tid in list(node.inputs) + list(node.outputs):
+        t = g.tensors.get(tid)
+        if t is not None:
+            total += t.nbytes
+    return total
 
 
 def is_supported(op: str, backend: str) -> bool:
