@@ -1,0 +1,48 @@
+{
+  "_note": "生产落地命令模板。NNAPI 自 Android 15 起 deprecated 且将于 2027 移除，不要作为新架构依赖；OEM 侧走 NeuroPilot NP8 + LiteRT NeuroPilot Accelerator。",
+  "target_chip": "Balanced-demo (GPU/NPU comparable)",
+  "npu": {
+    "model_convert": "np8-converter --framework=pytorch --input=part_N.onnx --output=part_N.tflite --quantize=int8 --calib=calibration.pt",
+    "aot_offline_compile": "ncc-tflite --arch=mdla3.0 --relax-fp32 part_N.tflite -o part_N.dla",
+    "jit": "LiteRT CompiledModel(Accelerator.NPU) + libLiteRtCompilerPlugin_MediaTek.so",
+    "runtime": "libLiteRtDispatch_MediaTek.so / neuronrt -a part_N.dla",
+    "honor": "NEURON_FLAG_MIN_GROUP_SIZE 与本工具 min_npu_nodes 语义一致；注意 float32 bias 要求与 INT8/FP16 量化一致性"
+  },
+  "gpu": {
+    "runtime": "LiteRT CompiledModel(Accelerator.GPU) / OpenCL-Vulkan compute",
+    "note": "GPU delegate 必须在调用 Interpreter 的同一线程初始化"
+  },
+  "cpu": {
+    "runtime": "LiteRT XNNPACK / ARM NN，作为不支持算子的兜底与降级路径"
+  },
+  "parts": [
+    {
+      "id": 0,
+      "backend": "gpu",
+      "nodes": 8,
+      "artifact": "parts/part_0.hxbin",
+      "command": "# 用上述 gpu 流程编译 parts/part_0.json"
+    },
+    {
+      "id": 1,
+      "backend": "cpu",
+      "nodes": 2,
+      "artifact": "parts/part_1.hxbin",
+      "command": "# 用上述 cpu 流程编译 parts/part_1.json"
+    },
+    {
+      "id": 2,
+      "backend": "gpu",
+      "nodes": 8,
+      "artifact": "parts/part_2.hxbin",
+      "command": "# 用上述 gpu 流程编译 parts/part_2.json"
+    },
+    {
+      "id": 3,
+      "backend": "cpu",
+      "nodes": 5,
+      "artifact": "parts/part_3.hxbin",
+      "command": "# 用上述 cpu 流程编译 parts/part_3.json"
+    }
+  ]
+}

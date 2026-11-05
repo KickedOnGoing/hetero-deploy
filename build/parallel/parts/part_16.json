@@ -1,0 +1,66 @@
+{
+  "part": {
+    "id": 16,
+    "backend": "gpu",
+    "nodes": [
+      "silu_2"
+    ],
+    "inputs": [
+      "linear_1"
+    ],
+    "outputs": [
+      "silu_2"
+    ],
+    "est_us": 45.0,
+    "artifact": "",
+    "compile_flags": {
+      "target": "gpu"
+    }
+  },
+  "nodes": [
+    {
+      "id": "silu_2",
+      "op": "silu",
+      "inputs": [
+        "linear_1"
+      ],
+      "outputs": [
+        "silu_2"
+      ],
+      "attrs": {},
+      "flops": 384,
+      "part": 16,
+      "backend": "gpu",
+      "name": "silu_2",
+      "hint": "gpu"
+    }
+  ],
+  "tensors": {
+    "linear_1": {
+      "id": "linear_1",
+      "dtype": "f32",
+      "shape": [
+        1,
+        64
+      ],
+      "kind": "activation",
+      "offset": -1,
+      "bytes": 256,
+      "producer": "linear_1"
+    },
+    "silu_2": {
+      "id": "silu_2",
+      "dtype": "f32",
+      "shape": [
+        1,
+        64
+      ],
+      "kind": "activation",
+      "offset": -1,
+      "bytes": 256,
+      "producer": "silu_2"
+    }
+  },
+  "target": "gpu",
+  "artifact": "parts/part_16.hxbin"
+}

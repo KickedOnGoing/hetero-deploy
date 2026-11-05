@@ -1,0 +1,91 @@
+{
+  "part": {
+    "id": 13,
+    "backend": "npu",
+    "nodes": [
+      "linear"
+    ],
+    "inputs": [
+      "flatten"
+    ],
+    "outputs": [
+      "linear"
+    ],
+    "est_us": 90.002,
+    "artifact": "",
+    "compile_flags": {
+      "target": "npu"
+    }
+  },
+  "nodes": [
+    {
+      "id": "linear",
+      "op": "linear",
+      "inputs": [
+        "flatten",
+        "p_branch_a_4_weight",
+        "p_branch_a_4_bias"
+      ],
+      "outputs": [
+        "linear"
+      ],
+      "attrs": {},
+      "flops": 8256,
+      "part": 13,
+      "backend": "npu",
+      "name": "linear",
+      "hint": "npu"
+    }
+  ],
+  "tensors": {
+    "flatten": {
+      "id": "flatten",
+      "dtype": "f32",
+      "shape": [
+        1,
+        64
+      ],
+      "kind": "activation",
+      "offset": -1,
+      "bytes": 256,
+      "producer": "flatten"
+    },
+    "p_branch_a_4_weight": {
+      "id": "p_branch_a_4_weight",
+      "dtype": "f32",
+      "shape": [
+        64,
+        64
+      ],
+      "kind": "weight",
+      "offset": 225920,
+      "bytes": 16384,
+      "producer": ""
+    },
+    "p_branch_a_4_bias": {
+      "id": "p_branch_a_4_bias",
+      "dtype": "f32",
+      "shape": [
+        64
+      ],
+      "kind": "weight",
+      "offset": 242304,
+      "bytes": 256,
+      "producer": ""
+    },
+    "linear": {
+      "id": "linear",
+      "dtype": "f32",
+      "shape": [
+        1,
+        64
+      ],
+      "kind": "activation",
+      "offset": -1,
+      "bytes": 256,
+      "producer": "linear"
+    }
+  },
+  "target": "npu",
+  "artifact": "parts/part_13.hxbin"
+}

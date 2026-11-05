@@ -1,0 +1,136 @@
+{
+  "part": {
+    "id": 17,
+    "backend": "npu",
+    "nodes": [
+      "cat",
+      "linear_2"
+    ],
+    "inputs": [
+      "relu",
+      "silu_2"
+    ],
+    "outputs": [
+      "linear_2"
+    ],
+    "est_us": 90.004,
+    "artifact": "",
+    "compile_flags": {
+      "target": "npu"
+    }
+  },
+  "nodes": [
+    {
+      "id": "cat",
+      "op": "concat",
+      "inputs": [
+        "relu",
+        "silu_2"
+      ],
+      "outputs": [
+        "cat"
+      ],
+      "attrs": {
+        "dim": 1
+      },
+      "flops": 0,
+      "part": 17,
+      "backend": "npu",
+      "name": "cat",
+      "hint": "npu"
+    },
+    {
+      "id": "linear_2",
+      "op": "linear",
+      "inputs": [
+        "cat",
+        "p_head_0_weight",
+        "p_head_0_bias"
+      ],
+      "outputs": [
+        "linear_2"
+      ],
+      "attrs": {},
+      "flops": 16448,
+      "part": 17,
+      "backend": "npu",
+      "name": "linear_2",
+      "hint": "npu"
+    }
+  ],
+  "tensors": {
+    "relu": {
+      "id": "relu",
+      "dtype": "f32",
+      "shape": [
+        1,
+        64
+      ],
+      "kind": "activation",
+      "offset": -1,
+      "bytes": 256,
+      "producer": "relu"
+    },
+    "silu_2": {
+      "id": "silu_2",
+      "dtype": "f32",
+      "shape": [
+        1,
+        64
+      ],
+      "kind": "activation",
+      "offset": -1,
+      "bytes": 256,
+      "producer": "silu_2"
+    },
+    "cat": {
+      "id": "cat",
+      "dtype": "f32",
+      "shape": [
+        1,
+        128
+      ],
+      "kind": "activation",
+      "offset": -1,
+      "bytes": 512,
+      "producer": "cat"
+    },
+    "p_head_0_weight": {
+      "id": "p_head_0_weight",
+      "dtype": "f32",
+      "shape": [
+        64,
+        128
+      ],
+      "kind": "weight",
+      "offset": 324992,
+      "bytes": 32768,
+      "producer": ""
+    },
+    "p_head_0_bias": {
+      "id": "p_head_0_bias",
+      "dtype": "f32",
+      "shape": [
+        64
+      ],
+      "kind": "weight",
+      "offset": 357760,
+      "bytes": 256,
+      "producer": ""
+    },
+    "linear_2": {
+      "id": "linear_2",
+      "dtype": "f32",
+      "shape": [
+        1,
+        64
+      ],
+      "kind": "activation",
+      "offset": -1,
+      "bytes": 256,
+      "producer": "linear_2"
+    }
+  },
+  "target": "npu",
+  "artifact": "parts/part_17.hxbin"
+}

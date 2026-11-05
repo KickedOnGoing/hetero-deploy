@@ -1,0 +1,69 @@
+{
+  "part": {
+    "id": 5,
+    "backend": "cpu",
+    "nodes": [
+      "silu_1"
+    ],
+    "inputs": [
+      "conv2d_4"
+    ],
+    "outputs": [
+      "silu_1"
+    ],
+    "est_us": 19.944,
+    "artifact": "",
+    "compile_flags": {
+      "target": "cpu"
+    }
+  },
+  "nodes": [
+    {
+      "id": "silu_1",
+      "op": "silu",
+      "inputs": [
+        "conv2d_4"
+      ],
+      "outputs": [
+        "silu_1"
+      ],
+      "attrs": {},
+      "flops": 786432,
+      "part": 5,
+      "backend": "cpu",
+      "name": "silu_1"
+    }
+  ],
+  "tensors": {
+    "conv2d_4": {
+      "id": "conv2d_4",
+      "dtype": "f32",
+      "shape": [
+        1,
+        32,
+        64,
+        64
+      ],
+      "kind": "activation",
+      "offset": -1,
+      "bytes": 524288,
+      "producer": "conv2d_4"
+    },
+    "silu_1": {
+      "id": "silu_1",
+      "dtype": "f32",
+      "shape": [
+        1,
+        32,
+        64,
+        64
+      ],
+      "kind": "activation",
+      "offset": -1,
+      "bytes": 524288,
+      "producer": "silu_1"
+    }
+  },
+  "target": "cpu",
+  "artifact": "parts/part_5.hxbin"
+}

@@ -1,0 +1,297 @@
+{
+  "summary": {
+    "critical_ratio_for_positive_gain": 0.64,
+    "ratio_note": "auto: when NPU is >= ~1.5x GPU, splitting to GPU stops paying off",
+    "scale_threshold_x": 8,
+    "fixed_overhead_knee_us": null,
+    "fixed_overhead_note": "fixed partition: S falls as overhead rises; knee where S<1"
+  },
+  "ratio": [
+    {
+      "parts": 6,
+      "backends": 2,
+      "overlap": true,
+      "speedup": 1.5762,
+      "upper_bound": 2.4012,
+      "verdict": "RECOMMENDED",
+      "latency_us": 857.53,
+      "baseline_us": 1351.67,
+      "transfer_ratio": 0.1676,
+      "gpu_gflops": 600,
+      "ratio_npu_over_gpu": 15.0
+    },
+    {
+      "parts": 4,
+      "backends": 2,
+      "overlap": true,
+      "speedup": 1.3713,
+      "upper_bound": 1.4219,
+      "verdict": "RECOMMENDED",
+      "latency_us": 982.49,
+      "baseline_us": 1347.25,
+      "transfer_ratio": 0.059,
+      "gpu_gflops": 1000,
+      "ratio_npu_over_gpu": 9.0
+    },
+    {
+      "parts": 4,
+      "backends": 2,
+      "overlap": true,
+      "speedup": 1.7806,
+      "upper_bound": 1.8671,
+      "verdict": "RECOMMENDED",
+      "latency_us": 755.38,
+      "baseline_us": 1345.03,
+      "transfer_ratio": 0.0712,
+      "gpu_gflops": 1500,
+      "ratio_npu_over_gpu": 6.0
+    },
+    {
+      "parts": 4,
+      "backends": 2,
+      "overlap": true,
+      "speedup": 2.1989,
+      "upper_bound": 2.3325,
+      "verdict": "RECOMMENDED",
+      "latency_us": 611.05,
+      "baseline_us": 1343.63,
+      "transfer_ratio": 0.0819,
+      "gpu_gflops": 2200,
+      "ratio_npu_over_gpu": 4.09
+    },
+    {
+      "parts": 4,
+      "backends": 3,
+      "overlap": true,
+      "speedup": 2.2738,
+      "upper_bound": 2.4273,
+      "verdict": "RECOMMENDED",
+      "latency_us": 590.57,
+      "baseline_us": 1342.82,
+      "transfer_ratio": 0.1639,
+      "gpu_gflops": 3000,
+      "ratio_npu_over_gpu": 3.0
+    },
+    {
+      "parts": 4,
+      "backends": 3,
+      "overlap": true,
+      "speedup": 2.2727,
+      "upper_bound": 2.4262,
+      "verdict": "RECOMMENDED",
+      "latency_us": 590.57,
+      "baseline_us": 1342.19,
+      "transfer_ratio": 0.1764,
+      "gpu_gflops": 4200,
+      "ratio_npu_over_gpu": 2.14
+    },
+    {
+      "parts": 4,
+      "backends": 2,
+      "overlap": true,
+      "speedup": 1.8388,
+      "upper_bound": 1.8495,
+      "verdict": "RECOMMENDED",
+      "latency_us": 519.08,
+      "baseline_us": 954.47,
+      "transfer_ratio": 0.0989,
+      "gpu_gflops": 6000,
+      "ratio_npu_over_gpu": 1.5
+    },
+    {
+      "parts": 4,
+      "backends": 2,
+      "overlap": true,
+      "speedup": 1.2636,
+      "upper_bound": 1.271,
+      "verdict": "RECOMMENDED",
+      "latency_us": 515.43,
+      "baseline_us": 651.31,
+      "transfer_ratio": 0.1098,
+      "gpu_gflops": 9000,
+      "ratio_npu_over_gpu": 1.0
+    },
+    {
+      "parts": 1,
+      "backends": 1,
+      "overlap": false,
+      "speedup": 1.0,
+      "upper_bound": 1.0,
+      "verdict": "MARGINAL",
+      "latency_us": 434.77,
+      "baseline_us": 434.77,
+      "transfer_ratio": 0.0,
+      "gpu_gflops": 14000,
+      "ratio_npu_over_gpu": 0.64
+    }
+  ],
+  "overhead": [
+    {
+      "T_par_us": 678.87,
+      "T_seq_us": 1344.24,
+      "parts": 4,
+      "backends": 2,
+      "overlap": true,
+      "speedup": 1.98,
+      "upper_bound": 1.987,
+      "transfer_ratio": 0.0095,
+      "fixed_cross_us": 0
+    },
+    {
+      "T_par_us": 688.87,
+      "T_seq_us": 1344.24,
+      "parts": 4,
+      "backends": 2,
+      "overlap": true,
+      "speedup": 1.951,
+      "upper_bound": 1.972,
+      "transfer_ratio": 0.0209,
+      "fixed_cross_us": 5
+    },
+    {
+      "T_par_us": 708.87,
+      "T_seq_us": 1344.24,
+      "parts": 4,
+      "backends": 2,
+      "overlap": true,
+      "speedup": 1.896,
+      "upper_bound": 1.944,
+      "transfer_ratio": 0.0436,
+      "fixed_cross_us": 15
+    },
+    {
+      "T_par_us": 748.87,
+      "T_seq_us": 1344.24,
+      "parts": 4,
+      "backends": 2,
+      "overlap": true,
+      "speedup": 1.795,
+      "upper_bound": 1.889,
+      "transfer_ratio": 0.089,
+      "fixed_cross_us": 35
+    },
+    {
+      "T_par_us": 798.87,
+      "T_seq_us": 1344.24,
+      "parts": 4,
+      "backends": 2,
+      "overlap": true,
+      "speedup": 1.683,
+      "upper_bound": 1.825,
+      "transfer_ratio": 0.1458,
+      "fixed_cross_us": 60
+    },
+    {
+      "T_par_us": 878.87,
+      "T_seq_us": 1344.24,
+      "parts": 4,
+      "backends": 2,
+      "overlap": true,
+      "speedup": 1.53,
+      "upper_bound": 1.731,
+      "transfer_ratio": 0.2366,
+      "fixed_cross_us": 100
+    },
+    {
+      "T_par_us": 978.87,
+      "T_seq_us": 1344.24,
+      "parts": 4,
+      "backends": 2,
+      "overlap": true,
+      "speedup": 1.373,
+      "upper_bound": 1.626,
+      "transfer_ratio": 0.3502,
+      "fixed_cross_us": 150
+    },
+    {
+      "T_par_us": 1178.87,
+      "T_seq_us": 1344.24,
+      "parts": 4,
+      "backends": 2,
+      "overlap": true,
+      "speedup": 1.14,
+      "upper_bound": 1.451,
+      "transfer_ratio": 0.5774,
+      "fixed_cross_us": 250
+    }
+  ],
+  "scale": [
+    {
+      "T_par_us": 328.4,
+      "T_seq_us": 126.2,
+      "parts": 4,
+      "backends": 2,
+      "overlap": true,
+      "speedup": 0.384,
+      "upper_bound": 0.434,
+      "transfer_ratio": 0.2543,
+      "flops_scale": 1
+    },
+    {
+      "T_par_us": 356.43,
+      "T_seq_us": 207.41,
+      "parts": 4,
+      "backends": 2,
+      "overlap": true,
+      "speedup": 0.582,
+      "upper_bound": 0.65,
+      "transfer_ratio": 0.2263,
+      "flops_scale": 2
+    },
+    {
+      "T_par_us": 412.49,
+      "T_seq_us": 369.81,
+      "parts": 4,
+      "backends": 2,
+      "overlap": true,
+      "speedup": 0.897,
+      "upper_bound": 0.986,
+      "transfer_ratio": 0.1854,
+      "flops_scale": 4
+    },
+    {
+      "T_par_us": 524.62,
+      "T_seq_us": 694.62,
+      "parts": 4,
+      "backends": 2,
+      "overlap": true,
+      "speedup": 1.324,
+      "upper_bound": 1.426,
+      "transfer_ratio": 0.1362,
+      "flops_scale": 8
+    },
+    {
+      "T_par_us": 748.87,
+      "T_seq_us": 1344.24,
+      "parts": 4,
+      "backends": 2,
+      "overlap": true,
+      "speedup": 1.795,
+      "upper_bound": 1.889,
+      "transfer_ratio": 0.089,
+      "flops_scale": 16
+    },
+    {
+      "T_par_us": 1197.38,
+      "T_seq_us": 2643.49,
+      "parts": 4,
+      "backends": 2,
+      "overlap": true,
+      "speedup": 2.208,
+      "upper_bound": 2.279,
+      "transfer_ratio": 0.0526,
+      "flops_scale": 32
+    },
+    {
+      "T_par_us": 2094.39,
+      "T_seq_us": 5241.97,
+      "parts": 4,
+      "backends": 2,
+      "overlap": true,
+      "speedup": 2.503,
+      "upper_bound": 2.548,
+      "transfer_ratio": 0.0289,
+      "flops_scale": 64
+    }
+  ]
+}

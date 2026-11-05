@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# C++ / CMake 构建产物（可由 cmake 重建）
+runtime/build/
+*.o
+*.a
+
+# 编辑器 / 系统杂项
+.DS_Store
+*.log
+*.swp
+
+# 说明：build/ 下的部署包（manifest / weights.bin / 敏感性分析结果）
+# 是本项目的实测交付物，体积约 1.6MB，随仓库保留以便直接查看。

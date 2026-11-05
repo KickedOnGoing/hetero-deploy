@@ -1,0 +1,66 @@
+{
+  "part": {
+    "id": 15,
+    "backend": "npu",
+    "nodes": [
+      "relu"
+    ],
+    "inputs": [
+      "linear"
+    ],
+    "outputs": [
+      "relu"
+    ],
+    "est_us": 90.0,
+    "artifact": "",
+    "compile_flags": {
+      "target": "npu"
+    }
+  },
+  "nodes": [
+    {
+      "id": "relu",
+      "op": "relu",
+      "inputs": [
+        "linear"
+      ],
+      "outputs": [
+        "relu"
+      ],
+      "attrs": {},
+      "flops": 128,
+      "part": 15,
+      "backend": "npu",
+      "name": "relu",
+      "hint": "npu"
+    }
+  ],
+  "tensors": {
+    "linear": {
+      "id": "linear",
+      "dtype": "f32",
+      "shape": [
+        1,
+        64
+      ],
+      "kind": "activation",
+      "offset": -1,
+      "bytes": 256,
+      "producer": "linear"
+    },
+    "relu": {
+      "id": "relu",
+      "dtype": "f32",
+      "shape": [
+        1,
+        64
+      ],
+      "kind": "activation",
+      "offset": -1,
+      "bytes": 256,
+      "producer": "relu"
+    }
+  },
+  "target": "npu",
+  "artifact": "parts/part_15.hxbin"
+}

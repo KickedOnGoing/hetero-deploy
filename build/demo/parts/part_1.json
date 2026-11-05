@@ -1,0 +1,318 @@
+{
+  "part": {
+    "id": 1,
+    "backend": "gpu",
+    "nodes": [
+      "silu",
+      "conv2d_4",
+      "silu_1",
+      "adaptive_avg_pool2d_1",
+      "flatten_1",
+      "linear_1",
+      "silu_2"
+    ],
+    "inputs": [
+      "conv2d_3"
+    ],
+    "outputs": [
+      "silu_2"
+    ],
+    "est_us": 318.329,
+    "artifact": "",
+    "compile_flags": {
+      "target": "gpu"
+    }
+  },
+  "nodes": [
+    {
+      "id": "silu",
+      "op": "silu",
+      "inputs": [
+        "conv2d_3"
+      ],
+      "outputs": [
+        "silu"
+      ],
+      "attrs": {},
+      "flops": 1769472,
+      "part": 1,
+      "backend": "gpu",
+      "name": "silu",
+      "hint": "gpu"
+    },
+    {
+      "id": "conv2d_4",
+      "op": "conv2d",
+      "inputs": [
+        "silu",
+        "p_branch_b_2_weight",
+        "p_branch_b_2_bias"
+      ],
+      "outputs": [
+        "conv2d_4"
+      ],
+      "attrs": {
+        "stride": [
+          1,
+          1
+        ],
+        "padding": [
+          1,
+          1
+        ],
+        "dilation": [
+          1,
+          1
+        ],
+        "groups": 1
+      },
+      "flops": 170164224,
+      "part": 1,
+      "backend": "gpu",
+      "name": "conv2d_4",
+      "hint": "gpu"
+    },
+    {
+      "id": "silu_1",
+      "op": "silu",
+      "inputs": [
+        "conv2d_4"
+      ],
+      "outputs": [
+        "silu_1"
+      ],
+      "attrs": {},
+      "flops": 1769472,
+      "part": 1,
+      "backend": "gpu",
+      "name": "silu_1",
+      "hint": "gpu"
+    },
+    {
+      "id": "adaptive_avg_pool2d_1",
+      "op": "global_avg_pool",
+      "inputs": [
+        "silu_1"
+      ],
+      "outputs": [
+        "adaptive_avg_pool2d_1"
+      ],
+      "attrs": {},
+      "flops": 589824,
+      "part": 1,
+      "backend": "gpu",
+      "name": "adaptive_avg_pool2d_1",
+      "hint": "gpu"
+    },
+    {
+      "id": "flatten_1",
+      "op": "flatten",
+      "inputs": [
+        "adaptive_avg_pool2d_1"
+      ],
+      "outputs": [
+        "flatten_1"
+      ],
+      "attrs": {
+        "start_dim": 1
+      },
+      "flops": 0,
+      "part": 1,
+      "backend": "gpu",
+      "name": "flatten_1",
+      "hint": "gpu"
+    },
+    {
+      "id": "linear_1",
+      "op": "linear",
+      "inputs": [
+        "flatten_1",
+        "p_branch_b_6_weight",
+        "p_branch_b_6_bias"
+      ],
+      "outputs": [
+        "linear_1"
+      ],
+      "attrs": {},
+      "flops": 4160,
+      "part": 1,
+      "backend": "gpu",
+      "name": "linear_1",
+      "hint": "gpu"
+    },
+    {
+      "id": "silu_2",
+      "op": "silu",
+      "inputs": [
+        "linear_1"
+      ],
+      "outputs": [
+        "silu_2"
+      ],
+      "attrs": {},
+      "flops": 384,
+      "part": 1,
+      "backend": "gpu",
+      "name": "silu_2",
+      "hint": "gpu"
+    }
+  ],
+  "tensors": {
+    "conv2d_3": {
+      "id": "conv2d_3",
+      "dtype": "f32",
+      "shape": [
+        1,
+        32,
+        96,
+        96
+      ],
+      "kind": "activation",
+      "offset": -1,
+      "bytes": 1179648,
+      "producer": "conv2d_3"
+    },
+    "silu": {
+      "id": "silu",
+      "dtype": "f32",
+      "shape": [
+        1,
+        32,
+        96,
+        96
+      ],
+      "kind": "activation",
+      "offset": -1,
+      "bytes": 1179648,
+      "producer": "silu"
+    },
+    "p_branch_b_2_weight": {
+      "id": "p_branch_b_2_weight",
+      "dtype": "f32",
+      "shape": [
+        32,
+        32,
+        3,
+        3
+      ],
+      "kind": "weight",
+      "offset": 279552,
+      "bytes": 36864,
+      "producer": ""
+    },
+    "p_branch_b_2_bias": {
+      "id": "p_branch_b_2_bias",
+      "dtype": "f32",
+      "shape": [
+        32
+      ],
+      "kind": "weight",
+      "offset": 316416,
+      "bytes": 128,
+      "producer": ""
+    },
+    "conv2d_4": {
+      "id": "conv2d_4",
+      "dtype": "f32",
+      "shape": [
+        1,
+        32,
+        96,
+        96
+      ],
+      "kind": "activation",
+      "offset": -1,
+      "bytes": 1179648,
+      "producer": "conv2d_4"
+    },
+    "silu_1": {
+      "id": "silu_1",
+      "dtype": "f32",
+      "shape": [
+        1,
+        32,
+        96,
+        96
+      ],
+      "kind": "activation",
+      "offset": -1,
+      "bytes": 1179648,
+      "producer": "silu_1"
+    },
+    "adaptive_avg_pool2d_1": {
+      "id": "adaptive_avg_pool2d_1",
+      "dtype": "f32",
+      "shape": [
+        1,
+        32,
+        1,
+        1
+      ],
+      "kind": "activation",
+      "offset": -1,
+      "bytes": 128,
+      "producer": "adaptive_avg_pool2d_1"
+    },
+    "flatten_1": {
+      "id": "flatten_1",
+      "dtype": "f32",
+      "shape": [
+        1,
+        32
+      ],
+      "kind": "activation",
+      "offset": -1,
+      "bytes": 128,
+      "producer": "flatten_1"
+    },
+    "p_branch_b_6_weight": {
+      "id": "p_branch_b_6_weight",
+      "dtype": "f32",
+      "shape": [
+        64,
+        32
+      ],
+      "kind": "weight",
+      "offset": 316544,
+      "bytes": 8192,
+      "producer": ""
+    },
+    "p_branch_b_6_bias": {
+      "id": "p_branch_b_6_bias",
+      "dtype": "f32",
+      "shape": [
+        64
+      ],
+      "kind": "weight",
+      "offset": 324736,
+      "bytes": 256,
+      "producer": ""
+    },
+    "linear_1": {
+      "id": "linear_1",
+      "dtype": "f32",
+      "shape": [
+        1,
+        64
+      ],
+      "kind": "activation",
+      "offset": -1,
+      "bytes": 256,
+      "producer": "linear_1"
+    },
+    "silu_2": {
+      "id": "silu_2",
+      "dtype": "f32",
+      "shape": [
+        1,
+        64
+      ],
+      "kind": "activation",
+      "offset": -1,
+      "bytes": 256,
+      "producer": "silu_2"
+    }
+  },
+  "target": "gpu",
+  "artifact": "parts/part_1.hxbin"
+}

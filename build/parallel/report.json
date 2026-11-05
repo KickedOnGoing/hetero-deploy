@@ -1,0 +1,307 @@
+{
+  "graph": "model",
+  "plan": {
+    "verdict": "NOT_RECOMMENDED",
+    "reason": "模拟加速比 0.43× < 1：跨片搬运/同步/提交开销超过了并行收益。建议减少分区数或改用单一后端。",
+    "objective": {
+      "latency": true,
+      "throughput": true
+    },
+    "dag": {
+      "nodes": 23,
+      "depth": 15,
+      "max_width": 2,
+      "branch_forks": 1,
+      "is_chain": false,
+      "levels": {
+        "0": 1,
+        "1": 1,
+        "2": 2,
+        "3": 2,
+        "4": 2,
+        "5": 2,
+        "6": 2,
+        "7": 2,
+        "8": 2,
+        "9": 2,
+        "10": 1,
+        "11": 1,
+        "12": 1,
+        "13": 1,
+        "14": 1
+      }
+    },
+    "baselines_single_backend_us": {
+      "cpu": 1761.35,
+      "gpu": 126.2,
+      "npu": 1031.54
+    },
+    "naive_sequential_baselines_us": {
+      "cpu": 1761.35,
+      "gpu": 126.2,
+      "npu": 406.19
+    },
+    "best_single_backend": "gpu",
+    "_baseline_note": "基线为单后端方案的离散事件模拟（含其自身的降级搬运），与分区方案可比",
+    "bound": {
+      "baseline_single_backend_us": 126.2,
+      "naive_sequential_baseline_us": 406.19,
+      "baseline_is_fair_simulation": true,
+      "partitioned_latency_us": 296.41,
+      "latency_speedup": 0.4258,
+      "total_serial_compute_us": 195.45,
+      "T1_serial_partitioned_us": 311.46,
+      "Tinf_critical_path_us": 241.41,
+      "theoretical_upper_bound_vs_baseline": 0.5228,
+      "intrinsic_parallelism_T1_over_Tinf": 1.2902,
+      "parallel_efficiency": 0.5254,
+      "transfer_overhead_ratio": 0.3725
+    },
+    "simulation": {
+      "makespan_us": 296.41,
+      "steady_frame_us": 171.2,
+      "throughput_fps": 5841.29,
+      "total_compute_us": 81.45,
+      "total_transfer_us": 116.01,
+      "total_launch_us": 114.0,
+      "critical_path_us": 241.41,
+      "overlap_pairs": 1,
+      "backend_busy_us": {
+        "cpu": 24.26,
+        "gpu": 171.2,
+        "npu": 0.0
+      },
+      "utilization": {
+        "cpu": 0.0818,
+        "gpu": 0.5776,
+        "npu": 0.0
+      }
+    },
+    "parallel_execution": {
+      "observed": true,
+      "overlap_pairs": 1,
+      "dag_max_width": 2,
+      "note": "若 observed=false，加速比来自『把算子放到更合适的后端』，而非不同芯片同时执行；两者必须分开评估"
+    },
+    "pipeline": {
+      "pipeline_depth": 3,
+      "bottleneck_backend": "gpu",
+      "steady_frame_us": 171.2,
+      "steady_fps": 5841.29,
+      "single_frame_latency_us": 296.41,
+      "no_pipeline_fps": 3373.72,
+      "ideal_balanced_fps": 15348.94,
+      "note": "跨帧流水让不同帧占用不同后端，提高吞吐但不降低单帧延迟"
+    },
+    "cost_breakdown": {
+      "compute_us": 81.45,
+      "transfer_us": 116.01,
+      "launch_us": 114.0,
+      "resource_idle_us": 55.0
+    },
+    "constraints": {
+      "cross_backend_edges": 2,
+      "boundary_bytes": 384,
+      "max_part_count": 4,
+      "per_backend_serial": true,
+      "thermal_note": "持续满载 2~3 分钟后 SoC 可能降频（文献实测最高 4.3× 衰减），运行时需启用热感知调度与动态降级"
+    }
+  },
+  "partition": {
+    "strategy": "force_hetero",
+    "search": {
+      "initial_us": 20888.59,
+      "final_us": 296.41,
+      "improvement_pct": 98.58,
+      "iterations": 1590,
+      "accepted_moves": 675
+    },
+    "demoted_nodes": 0,
+    "small_npu_parts": 0,
+    "part_count": 4,
+    "cross_backend_edges": 2,
+    "total_boundary_bytes": 384,
+    "assignment": {
+      "conv2d": "gpu",
+      "relu_": "gpu",
+      "conv2d_1": "gpu",
+      "relu__1": "gpu",
+      "conv2d_2": "gpu",
+      "relu__2": "gpu",
+      "adaptive_avg_pool2d": "gpu",
+      "flatten": "gpu",
+      "linear": "gpu",
+      "relu": "gpu",
+      "conv2d_3": "gpu",
+      "silu": "gpu",
+      "conv2d_4": "gpu",
+      "silu_1": "gpu",
+      "adaptive_avg_pool2d_1": "gpu",
+      "flatten_1": "gpu",
+      "linear_1": "cpu",
+      "silu_2": "cpu",
+      "cat": "cpu",
+      "linear_2": "cpu",
+      "gelu": "cpu",
+      "linear_3": "cpu",
+      "sigmoid": "cpu"
+    }
+  },
+  "lower": {
+    "aten_nodes": 28,
+    "unsupported": 0,
+    "hints": 2,
+    "bn_folded": 3,
+    "identity_removed": 0,
+    "silu_decomposed": 0
+  },
+  "parts": [
+    {
+      "part": 0,
+      "backend": "gpu",
+      "nodes": 8,
+      "ops": {
+        "conv2d": 3,
+        "relu": 1,
+        "silu": 2,
+        "global_avg_pool": 1,
+        "flatten": 1
+      },
+      "est_us": 66.1,
+      "cross_in": [],
+      "cross_out": [
+        "flatten_1"
+      ],
+      "reason": "含 NPU 不支持的非线性/归一化算子，或需要与 NPU 分支并发，放 GPU；跨片边界 1 条"
+    },
+    {
+      "part": 1,
+      "backend": "cpu",
+      "nodes": 2,
+      "ops": {
+        "linear": 1,
+        "silu": 1
+      },
+      "est_us": 12.05,
+      "cross_in": [
+        "flatten_1"
+      ],
+      "cross_out": [],
+      "reason": "NPU/GPU 不支持的算子兜底，或小算子放 CPU 避免碎片化与搬运；跨片边界 1 条"
+    },
+    {
+      "part": 2,
+      "backend": "gpu",
+      "nodes": 8,
+      "ops": {
+        "conv2d": 2,
+        "relu": 3,
+        "global_avg_pool": 1,
+        "flatten": 1,
+        "linear": 1
+      },
+      "est_us": 105.1,
+      "cross_in": [],
+      "cross_out": [
+        "relu"
+      ],
+      "reason": "含 NPU 不支持的非线性/归一化算子，或需要与 NPU 分支并发，放 GPU；跨片边界 1 条"
+    },
+    {
+      "part": 3,
+      "backend": "cpu",
+      "nodes": 5,
+      "ops": {
+        "concat": 1,
+        "linear": 2,
+        "gelu": 1,
+        "sigmoid": 1
+      },
+      "est_us": 12.21,
+      "cross_in": [
+        "relu"
+      ],
+      "cross_out": [],
+      "reason": "NPU/GPU 不支持的算子兜底，或小算子放 CPU 避免碎片化与搬运；跨片边界 1 条"
+    }
+  ],
+  "edges": [
+    {
+      "src": 0,
+      "dst": 1,
+      "tensor": "flatten_1",
+      "src_backend": "gpu",
+      "dst_backend": "cpu",
+      "bytes": 128,
+      "cost_us": 55.002,
+      "cross": true,
+      "zero_copy": true
+    },
+    {
+      "src": 0,
+      "dst": 2,
+      "tensor": "relu_",
+      "src_backend": "gpu",
+      "dst_backend": "gpu",
+      "bytes": 131072,
+      "cost_us": 0.0,
+      "cross": false,
+      "zero_copy": true
+    },
+    {
+      "src": 2,
+      "dst": 3,
+      "tensor": "relu",
+      "src_backend": "gpu",
+      "dst_backend": "cpu",
+      "bytes": 256,
+      "cost_us": 55.005,
+      "cross": true,
+      "zero_copy": true
+    },
+    {
+      "src": 1,
+      "dst": 3,
+      "tensor": "silu_2",
+      "src_backend": "cpu",
+      "dst_backend": "cpu",
+      "bytes": 256,
+      "cost_us": 0.0,
+      "cross": false,
+      "zero_copy": true
+    }
+  ],
+  "chip": {
+    "name": "Balanced-demo (GPU/NPU comparable)",
+    "backends": {
+      "cpu": {
+        "peak_gflops": 160.0,
+        "launch_us": 12.0,
+        "layout": "NCHW"
+      },
+      "gpu": {
+        "peak_gflops": 4200.0,
+        "launch_us": 45.0,
+        "layout": "NHWC"
+      },
+      "npu": {
+        "peak_gflops": 6000.0,
+        "launch_us": 90.0,
+        "layout": "NHWC"
+      }
+    },
+    "fixed_cross_us": 35.0,
+    "per_mb_us": 18.0,
+    "layout_convert_us": 20.0,
+    "zero_copy_capable": true,
+    "intra_part_sync_us": 3.0,
+    "min_npu_nodes": 2,
+    "min_part_flops": 1000000,
+    "backend_slots": {
+      "cpu": 1,
+      "gpu": 1,
+      "npu": 1
+    },
+    "_note": "用于并行分支研究的『均衡型』芯片档案：GPU 与 NPU 有效吞吐接近。真实项目必须用 OEM 上板 profiling 数据回填，本文件只是演示收益临界条件的模板。"
+  }
+}

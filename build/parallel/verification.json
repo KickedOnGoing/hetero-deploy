@@ -1,0 +1,124 @@
+{
+  "numerics": {
+    "pass": true,
+    "atol": 1e-05,
+    "rtol": 0.0001,
+    "details": [
+      {
+        "out": 0,
+        "shape": [
+          1,
+          10
+        ],
+        "max_abs_err": 0.0,
+        "mean_abs_err": 0.0,
+        "pass": true
+      }
+    ]
+  },
+  "structure": {
+    "pass": true,
+    "errors": [],
+    "parts": 4,
+    "nodes": 23,
+    "cross_edges": 4,
+    "subgraph_dag_acyclic": true
+  },
+  "partition_explain": [
+    {
+      "part": 0,
+      "backend": "gpu",
+      "nodes": 8,
+      "ops": {
+        "conv2d": 3,
+        "relu": 1,
+        "silu": 2,
+        "global_avg_pool": 1,
+        "flatten": 1
+      },
+      "est_us": 66.1,
+      "cross_in": [],
+      "cross_out": [
+        "flatten_1"
+      ],
+      "reason": "含 NPU 不支持的非线性/归一化算子，或需要与 NPU 分支并发，放 GPU；跨片边界 1 条"
+    },
+    {
+      "part": 1,
+      "backend": "cpu",
+      "nodes": 2,
+      "ops": {
+        "linear": 1,
+        "silu": 1
+      },
+      "est_us": 12.05,
+      "cross_in": [
+        "flatten_1"
+      ],
+      "cross_out": [],
+      "reason": "NPU/GPU 不支持的算子兜底，或小算子放 CPU 避免碎片化与搬运；跨片边界 1 条"
+    },
+    {
+      "part": 2,
+      "backend": "gpu",
+      "nodes": 8,
+      "ops": {
+        "conv2d": 2,
+        "relu": 3,
+        "global_avg_pool": 1,
+        "flatten": 1,
+        "linear": 1
+      },
+      "est_us": 105.1,
+      "cross_in": [],
+      "cross_out": [
+        "relu"
+      ],
+      "reason": "含 NPU 不支持的非线性/归一化算子，或需要与 NPU 分支并发，放 GPU；跨片边界 1 条"
+    },
+    {
+      "part": 3,
+      "backend": "cpu",
+      "nodes": 5,
+      "ops": {
+        "concat": 1,
+        "linear": 2,
+        "gelu": 1,
+        "sigmoid": 1
+      },
+      "est_us": 12.21,
+      "cross_in": [
+        "relu"
+      ],
+      "cross_out": [],
+      "reason": "NPU/GPU 不支持的算子兜底，或小算子放 CPU 避免碎片化与搬运；跨片边界 1 条"
+    }
+  ],
+  "search_trace": {
+    "initial_us": 20888.59,
+    "final_us": 296.41,
+    "improvement_pct": 98.58,
+    "iterations": 1590,
+    "accepted_moves": 675
+  },
+  "simulation": {
+    "makespan_us": 296.41,
+    "steady_frame_us": 171.2,
+    "throughput_fps": 5841.29,
+    "total_compute_us": 81.45,
+    "total_transfer_us": 116.01,
+    "total_launch_us": 114.0,
+    "critical_path_us": 241.41,
+    "overlap_pairs": 1,
+    "backend_busy_us": {
+      "cpu": 24.26,
+      "gpu": 171.2,
+      "npu": 0.0
+    },
+    "utilization": {
+      "cpu": 0.0818,
+      "gpu": 0.5776,
+      "npu": 0.0
+    }
+  }
+}

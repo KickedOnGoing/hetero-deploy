@@ -1,0 +1,16 @@
+{
+  "_note": "用于并行分支研究的『均衡型』芯片档案：GPU 与 NPU 有效吞吐接近。真实项目必须用 OEM 上板 profiling 数据回填，本文件只是演示收益临界条件的模板。",
+  "name": "Balanced-demo (GPU/NPU comparable)",
+  "backends": {
+    "cpu": { "peak_gflops": 160.0, "launch_us": 12.0, "layout": "NCHW" },
+    "gpu": { "peak_gflops": 4200.0, "launch_us": 45.0, "layout": "NHWC" },
+    "npu": { "peak_gflops": 6000.0, "launch_us": 90.0, "layout": "NHWC" }
+  },
+  "fixed_cross_us": 35.0,
+  "per_mb_us": 18.0,
+  "layout_convert_us": 20.0,
+  "zero_copy_capable": true,
+  "intra_part_sync_us": 3.0,
+  "min_npu_nodes": 2,
+  "min_part_flops": 1000000
+}

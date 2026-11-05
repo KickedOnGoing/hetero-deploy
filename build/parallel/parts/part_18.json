@@ -1,0 +1,66 @@
+{
+  "part": {
+    "id": 18,
+    "backend": "gpu",
+    "nodes": [
+      "gelu"
+    ],
+    "inputs": [
+      "linear_2"
+    ],
+    "outputs": [
+      "gelu"
+    ],
+    "est_us": 45.0,
+    "artifact": "",
+    "compile_flags": {
+      "target": "gpu"
+    }
+  },
+  "nodes": [
+    {
+      "id": "gelu",
+      "op": "gelu",
+      "inputs": [
+        "linear_2"
+      ],
+      "outputs": [
+        "gelu"
+      ],
+      "attrs": {},
+      "flops": 384,
+      "part": 18,
+      "backend": "gpu",
+      "name": "gelu",
+      "hint": "npu"
+    }
+  ],
+  "tensors": {
+    "linear_2": {
+      "id": "linear_2",
+      "dtype": "f32",
+      "shape": [
+        1,
+        64
+      ],
+      "kind": "activation",
+      "offset": -1,
+      "bytes": 256,
+      "producer": "linear_2"
+    },
+    "gelu": {
+      "id": "gelu",
+      "dtype": "f32",
+      "shape": [
+        1,
+        64
+      ],
+      "kind": "activation",
+      "offset": -1,
+      "bytes": 256,
+      "producer": "gelu"
+    }
+  },
+  "target": "gpu",
+  "artifact": "parts/part_18.hxbin"
+}

@@ -1,0 +1,69 @@
+{
+  "part": {
+    "id": 7,
+    "backend": "cpu",
+    "nodes": [
+      "adaptive_avg_pool2d_1"
+    ],
+    "inputs": [
+      "silu_1"
+    ],
+    "outputs": [
+      "adaptive_avg_pool2d_1"
+    ],
+    "est_us": 14.648,
+    "artifact": "",
+    "compile_flags": {
+      "target": "cpu"
+    }
+  },
+  "nodes": [
+    {
+      "id": "adaptive_avg_pool2d_1",
+      "op": "global_avg_pool",
+      "inputs": [
+        "silu_1"
+      ],
+      "outputs": [
+        "adaptive_avg_pool2d_1"
+      ],
+      "attrs": {},
+      "flops": 262144,
+      "part": 7,
+      "backend": "cpu",
+      "name": "adaptive_avg_pool2d_1"
+    }
+  ],
+  "tensors": {
+    "silu_1": {
+      "id": "silu_1",
+      "dtype": "f32",
+      "shape": [
+        1,
+        32,
+        64,
+        64
+      ],
+      "kind": "activation",
+      "offset": -1,
+      "bytes": 524288,
+      "producer": "silu_1"
+    },
+    "adaptive_avg_pool2d_1": {
+      "id": "adaptive_avg_pool2d_1",
+      "dtype": "f32",
+      "shape": [
+        1,
+        32,
+        1,
+        1
+      ],
+      "kind": "activation",
+      "offset": -1,
+      "bytes": 128,
+      "producer": "adaptive_avg_pool2d_1"
+    }
+  },
+  "target": "cpu",
+  "artifact": "parts/part_7.hxbin"
+}

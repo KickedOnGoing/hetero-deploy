@@ -1,0 +1,69 @@
+{
+  "part": {
+    "id": 9,
+    "backend": "cpu",
+    "nodes": [
+      "flatten_1"
+    ],
+    "inputs": [
+      "adaptive_avg_pool2d_1"
+    ],
+    "outputs": [
+      "flatten_1"
+    ],
+    "est_us": 12.0,
+    "artifact": "",
+    "compile_flags": {
+      "target": "cpu"
+    }
+  },
+  "nodes": [
+    {
+      "id": "flatten_1",
+      "op": "flatten",
+      "inputs": [
+        "adaptive_avg_pool2d_1"
+      ],
+      "outputs": [
+        "flatten_1"
+      ],
+      "attrs": {
+        "start_dim": 1
+      },
+      "flops": 0,
+      "part": 9,
+      "backend": "cpu",
+      "name": "flatten_1"
+    }
+  ],
+  "tensors": {
+    "adaptive_avg_pool2d_1": {
+      "id": "adaptive_avg_pool2d_1",
+      "dtype": "f32",
+      "shape": [
+        1,
+        32,
+        1,
+        1
+      ],
+      "kind": "activation",
+      "offset": -1,
+      "bytes": 128,
+      "producer": "adaptive_avg_pool2d_1"
+    },
+    "flatten_1": {
+      "id": "flatten_1",
+      "dtype": "f32",
+      "shape": [
+        1,
+        32
+      ],
+      "kind": "activation",
+      "offset": -1,
+      "bytes": 128,
+      "producer": "flatten_1"
+    }
+  },
+  "target": "cpu",
+  "artifact": "parts/part_9.hxbin"
+}

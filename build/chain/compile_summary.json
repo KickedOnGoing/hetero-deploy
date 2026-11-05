@@ -1,0 +1,23 @@
+{
+  "verdict": "NOT_RECOMMENDED",
+  "reason": "该图为链式 DAG（最大宽度=1），不存在可并行的独立分支；任何算子级切分只会引入跨片搬运与同步，单帧延迟必然变差。建议：单后端整图编译 + 跨帧流水（仅提升吞吐）。",
+  "nodes": 9,
+  "parts": 1,
+  "backends": [
+    "npu"
+  ],
+  "cross_backend_edges": 0,
+  "latency_us": 106.06,
+  "baseline_us": {
+    "cpu": 1180.08,
+    "gpu": 228.2,
+    "npu": 106.06
+  },
+  "speedup": 1.0,
+  "theoretical_upper_bound": 1.0,
+  "steady_fps": 9428.98,
+  "parallel_execution": false,
+  "overlap_pairs": 0,
+  "numerics_pass": true,
+  "structure_pass": true
+}

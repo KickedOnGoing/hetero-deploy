@@ -1,0 +1,72 @@
+{
+  "numerics": {
+    "pass": true,
+    "atol": 1e-05,
+    "rtol": 0.0001,
+    "details": [
+      {
+        "out": 0,
+        "shape": [
+          1,
+          10
+        ],
+        "max_abs_err": 7.450580596923828e-09,
+        "mean_abs_err": 3.4458935704861915e-09,
+        "pass": true
+      }
+    ]
+  },
+  "structure": {
+    "pass": true,
+    "errors": [],
+    "parts": 1,
+    "nodes": 9,
+    "cross_edges": 0,
+    "subgraph_dag_acyclic": true
+  },
+  "partition_explain": [
+    {
+      "part": 0,
+      "backend": "npu",
+      "nodes": 9,
+      "ops": {
+        "conv2d": 3,
+        "relu": 3,
+        "global_avg_pool": 1,
+        "flatten": 1,
+        "linear": 1
+      },
+      "est_us": 106.06,
+      "cross_in": [],
+      "cross_out": [],
+      "reason": "算子在 APU 支持表内且计算密集，放 NPU 取得最高能效"
+    }
+  ],
+  "search_trace": {
+    "initial_us": 574.07,
+    "final_us": 106.06,
+    "improvement_pct": 81.53,
+    "iterations": 1800,
+    "accepted_moves": 62
+  },
+  "simulation": {
+    "makespan_us": 106.06,
+    "steady_frame_us": 106.06,
+    "throughput_fps": 9428.98,
+    "total_compute_us": 16.06,
+    "total_transfer_us": 0,
+    "total_launch_us": 90.0,
+    "critical_path_us": 106.06,
+    "overlap_pairs": 0,
+    "backend_busy_us": {
+      "cpu": 0.0,
+      "gpu": 0.0,
+      "npu": 106.06
+    },
+    "utilization": {
+      "cpu": 0.0,
+      "gpu": 0.0,
+      "npu": 1.0
+    }
+  }
+}

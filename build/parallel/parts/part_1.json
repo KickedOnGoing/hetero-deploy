@@ -1,0 +1,120 @@
+{
+  "part": {
+    "id": 1,
+    "backend": "cpu",
+    "nodes": [
+      "linear_1",
+      "silu_2"
+    ],
+    "inputs": [
+      "flatten_1"
+    ],
+    "outputs": [
+      "silu_2"
+    ],
+    "est_us": 12.052,
+    "artifact": "",
+    "compile_flags": {
+      "target": "cpu"
+    }
+  },
+  "nodes": [
+    {
+      "id": "linear_1",
+      "op": "linear",
+      "inputs": [
+        "flatten_1",
+        "p_branch_b_6_weight",
+        "p_branch_b_6_bias"
+      ],
+      "outputs": [
+        "linear_1"
+      ],
+      "attrs": {},
+      "flops": 4160,
+      "part": 1,
+      "backend": "cpu",
+      "name": "linear_1",
+      "hint": "gpu"
+    },
+    {
+      "id": "silu_2",
+      "op": "silu",
+      "inputs": [
+        "linear_1"
+      ],
+      "outputs": [
+        "silu_2"
+      ],
+      "attrs": {},
+      "flops": 384,
+      "part": 1,
+      "backend": "cpu",
+      "name": "silu_2",
+      "hint": "gpu"
+    }
+  ],
+  "tensors": {
+    "flatten_1": {
+      "id": "flatten_1",
+      "dtype": "f32",
+      "shape": [
+        1,
+        32
+      ],
+      "kind": "activation",
+      "offset": -1,
+      "bytes": 128,
+      "producer": "flatten_1"
+    },
+    "p_branch_b_6_weight": {
+      "id": "p_branch_b_6_weight",
+      "dtype": "f32",
+      "shape": [
+        64,
+        32
+      ],
+      "kind": "weight",
+      "offset": 316544,
+      "bytes": 8192,
+      "producer": ""
+    },
+    "p_branch_b_6_bias": {
+      "id": "p_branch_b_6_bias",
+      "dtype": "f32",
+      "shape": [
+        64
+      ],
+      "kind": "weight",
+      "offset": 324736,
+      "bytes": 256,
+      "producer": ""
+    },
+    "linear_1": {
+      "id": "linear_1",
+      "dtype": "f32",
+      "shape": [
+        1,
+        64
+      ],
+      "kind": "activation",
+      "offset": -1,
+      "bytes": 256,
+      "producer": "linear_1"
+    },
+    "silu_2": {
+      "id": "silu_2",
+      "dtype": "f32",
+      "shape": [
+        1,
+        64
+      ],
+      "kind": "activation",
+      "offset": -1,
+      "bytes": 256,
+      "producer": "silu_2"
+    }
+  },
+  "target": "cpu",
+  "artifact": "parts/part_1.hxbin"
+}

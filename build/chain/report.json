@@ -1,0 +1,190 @@
+{
+  "graph": "model",
+  "plan": {
+    "verdict": "NOT_RECOMMENDED",
+    "reason": "该图为链式 DAG（最大宽度=1），不存在可并行的独立分支；任何算子级切分只会引入跨片搬运与同步，单帧延迟必然变差。建议：单后端整图编译 + 跨帧流水（仅提升吞吐）。",
+    "objective": {
+      "latency": true,
+      "throughput": true
+    },
+    "dag": {
+      "nodes": 9,
+      "depth": 9,
+      "max_width": 1,
+      "branch_forks": 0,
+      "is_chain": true,
+      "levels": {
+        "0": 1,
+        "1": 1,
+        "2": 1,
+        "3": 1,
+        "4": 1,
+        "5": 1,
+        "6": 1,
+        "7": 1,
+        "8": 1
+      }
+    },
+    "baselines_single_backend_us": {
+      "cpu": 1180.08,
+      "gpu": 228.2,
+      "npu": 106.06
+    },
+    "naive_sequential_baselines_us": {
+      "cpu": 1180.08,
+      "gpu": 228.2,
+      "npu": 106.06
+    },
+    "best_single_backend": "npu",
+    "_baseline_note": "基线为单后端方案的离散事件模拟（含其自身的降级搬运），与分区方案可比",
+    "bound": {
+      "baseline_single_backend_us": 106.06,
+      "naive_sequential_baseline_us": 106.06,
+      "baseline_is_fair_simulation": true,
+      "partitioned_latency_us": 106.06,
+      "latency_speedup": 1.0,
+      "total_serial_compute_us": 106.06,
+      "T1_serial_partitioned_us": 106.06,
+      "Tinf_critical_path_us": 106.06,
+      "theoretical_upper_bound_vs_baseline": 1.0,
+      "intrinsic_parallelism_T1_over_Tinf": 1.0,
+      "parallel_efficiency": 1.0,
+      "transfer_overhead_ratio": 0.0
+    },
+    "simulation": {
+      "makespan_us": 106.06,
+      "steady_frame_us": 106.06,
+      "throughput_fps": 9428.98,
+      "total_compute_us": 16.06,
+      "total_transfer_us": 0,
+      "total_launch_us": 90.0,
+      "critical_path_us": 106.06,
+      "overlap_pairs": 0,
+      "backend_busy_us": {
+        "cpu": 0.0,
+        "gpu": 0.0,
+        "npu": 106.06
+      },
+      "utilization": {
+        "cpu": 0.0,
+        "gpu": 0.0,
+        "npu": 1.0
+      }
+    },
+    "parallel_execution": {
+      "observed": false,
+      "overlap_pairs": 0,
+      "dag_max_width": 1,
+      "note": "若 observed=false，加速比来自『把算子放到更合适的后端』，而非不同芯片同时执行；两者必须分开评估"
+    },
+    "pipeline": {
+      "pipeline_depth": 2,
+      "bottleneck_backend": "npu",
+      "steady_frame_us": 106.06,
+      "steady_fps": 9428.98,
+      "single_frame_latency_us": 106.06,
+      "no_pipeline_fps": 9428.98,
+      "ideal_balanced_fps": 28286.93,
+      "note": "跨帧流水让不同帧占用不同后端，提高吞吐但不降低单帧延迟"
+    },
+    "cost_breakdown": {
+      "compute_us": 16.06,
+      "transfer_us": 0,
+      "launch_us": 90.0,
+      "resource_idle_us": 0.0
+    },
+    "constraints": {
+      "cross_backend_edges": 0,
+      "boundary_bytes": 0,
+      "max_part_count": 1,
+      "per_backend_serial": true,
+      "thermal_note": "持续满载 2~3 分钟后 SoC 可能降频（文献实测最高 4.3× 衰减），运行时需启用热感知调度与动态降级"
+    }
+  },
+  "partition": {
+    "selected_candidate": "search",
+    "strategy": "auto",
+    "search": {
+      "initial_us": 574.07,
+      "final_us": 106.06,
+      "improvement_pct": 81.53,
+      "iterations": 1800,
+      "accepted_moves": 62
+    },
+    "demoted_nodes": 0,
+    "small_npu_parts": 0,
+    "part_count": 1,
+    "cross_backend_edges": 0,
+    "total_boundary_bytes": 0,
+    "assignment": {
+      "conv2d": "npu",
+      "relu_": "npu",
+      "conv2d_1": "npu",
+      "relu__1": "npu",
+      "conv2d_2": "npu",
+      "relu__2": "npu",
+      "adaptive_avg_pool2d": "npu",
+      "flatten": "npu",
+      "linear": "npu"
+    }
+  },
+  "lower": {
+    "aten_nodes": 12,
+    "unsupported": 0,
+    "hints": 0,
+    "bn_folded": 3,
+    "identity_removed": 0,
+    "silu_decomposed": 0
+  },
+  "parts": [
+    {
+      "part": 0,
+      "backend": "npu",
+      "nodes": 9,
+      "ops": {
+        "conv2d": 3,
+        "relu": 3,
+        "global_avg_pool": 1,
+        "flatten": 1,
+        "linear": 1
+      },
+      "est_us": 106.06,
+      "cross_in": [],
+      "cross_out": [],
+      "reason": "算子在 APU 支持表内且计算密集，放 NPU 取得最高能效"
+    }
+  ],
+  "edges": [],
+  "chip": {
+    "name": "Dimensity-9300-class (可配置模板)",
+    "backends": {
+      "cpu": {
+        "peak_gflops": 180.0,
+        "launch_us": 12.0,
+        "layout": "NCHW"
+      },
+      "gpu": {
+        "peak_gflops": 1400.0,
+        "launch_us": 45.0,
+        "layout": "NHWC"
+      },
+      "npu": {
+        "peak_gflops": 9000.0,
+        "launch_us": 90.0,
+        "layout": "NHWC"
+      }
+    },
+    "fixed_cross_us": 35.0,
+    "per_mb_us": 18.0,
+    "layout_convert_us": 20.0,
+    "zero_copy_capable": true,
+    "intra_part_sync_us": 3.0,
+    "min_npu_nodes": 3,
+    "min_part_flops": 2000000,
+    "backend_slots": {
+      "cpu": 1,
+      "gpu": 1,
+      "npu": 1
+    }
+  }
+}

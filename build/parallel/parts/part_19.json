@@ -1,0 +1,91 @@
+{
+  "part": {
+    "id": 19,
+    "backend": "npu",
+    "nodes": [
+      "linear_3"
+    ],
+    "inputs": [
+      "gelu"
+    ],
+    "outputs": [
+      "linear_3"
+    ],
+    "est_us": 90.0,
+    "artifact": "",
+    "compile_flags": {
+      "target": "npu"
+    }
+  },
+  "nodes": [
+    {
+      "id": "linear_3",
+      "op": "linear",
+      "inputs": [
+        "gelu",
+        "p_head_2_weight",
+        "p_head_2_bias"
+      ],
+      "outputs": [
+        "linear_3"
+      ],
+      "attrs": {},
+      "flops": 1290,
+      "part": 19,
+      "backend": "npu",
+      "name": "linear_3",
+      "hint": "npu"
+    }
+  ],
+  "tensors": {
+    "gelu": {
+      "id": "gelu",
+      "dtype": "f32",
+      "shape": [
+        1,
+        64
+      ],
+      "kind": "activation",
+      "offset": -1,
+      "bytes": 256,
+      "producer": "gelu"
+    },
+    "p_head_2_weight": {
+      "id": "p_head_2_weight",
+      "dtype": "f32",
+      "shape": [
+        10,
+        64
+      ],
+      "kind": "weight",
+      "offset": 358016,
+      "bytes": 2560,
+      "producer": ""
+    },
+    "p_head_2_bias": {
+      "id": "p_head_2_bias",
+      "dtype": "f32",
+      "shape": [
+        10
+      ],
+      "kind": "weight",
+      "offset": 360576,
+      "bytes": 40,
+      "producer": ""
+    },
+    "linear_3": {
+      "id": "linear_3",
+      "dtype": "f32",
+      "shape": [
+        1,
+        10
+      ],
+      "kind": "activation",
+      "offset": -1,
+      "bytes": 40,
+      "producer": "linear_3"
+    }
+  },
+  "target": "npu",
+  "artifact": "parts/part_19.hxbin"
+}

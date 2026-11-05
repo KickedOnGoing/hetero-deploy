@@ -1,0 +1,70 @@
+{
+  "part": {
+    "id": 8,
+    "backend": "gpu",
+    "nodes": [
+      "silu_1"
+    ],
+    "inputs": [
+      "conv2d_4"
+    ],
+    "outputs": [
+      "silu_1"
+    ],
+    "est_us": 45.049,
+    "artifact": "",
+    "compile_flags": {
+      "target": "gpu"
+    }
+  },
+  "nodes": [
+    {
+      "id": "silu_1",
+      "op": "silu",
+      "inputs": [
+        "conv2d_4"
+      ],
+      "outputs": [
+        "silu_1"
+      ],
+      "attrs": {},
+      "flops": 196608,
+      "part": 8,
+      "backend": "gpu",
+      "name": "silu_1",
+      "hint": "gpu"
+    }
+  ],
+  "tensors": {
+    "conv2d_4": {
+      "id": "conv2d_4",
+      "dtype": "f32",
+      "shape": [
+        1,
+        32,
+        32,
+        32
+      ],
+      "kind": "activation",
+      "offset": -1,
+      "bytes": 131072,
+      "producer": "conv2d_4"
+    },
+    "silu_1": {
+      "id": "silu_1",
+      "dtype": "f32",
+      "shape": [
+        1,
+        32,
+        32,
+        32
+      ],
+      "kind": "activation",
+      "offset": -1,
+      "bytes": 131072,
+      "producer": "silu_1"
+    }
+  },
+  "target": "gpu",
+  "artifact": "parts/part_8.hxbin"
+}

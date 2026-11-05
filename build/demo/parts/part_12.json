@@ -1,0 +1,65 @@
+{
+  "part": {
+    "id": 12,
+    "backend": "cpu",
+    "nodes": [
+      "relu"
+    ],
+    "inputs": [
+      "linear"
+    ],
+    "outputs": [
+      "relu"
+    ],
+    "est_us": 12.001,
+    "artifact": "",
+    "compile_flags": {
+      "target": "cpu"
+    }
+  },
+  "nodes": [
+    {
+      "id": "relu",
+      "op": "relu",
+      "inputs": [
+        "linear"
+      ],
+      "outputs": [
+        "relu"
+      ],
+      "attrs": {},
+      "flops": 128,
+      "part": 12,
+      "backend": "cpu",
+      "name": "relu"
+    }
+  ],
+  "tensors": {
+    "linear": {
+      "id": "linear",
+      "dtype": "f32",
+      "shape": [
+        1,
+        64
+      ],
+      "kind": "activation",
+      "offset": -1,
+      "bytes": 256,
+      "producer": "linear"
+    },
+    "relu": {
+      "id": "relu",
+      "dtype": "f32",
+      "shape": [
+        1,
+        64
+      ],
+      "kind": "activation",
+      "offset": -1,
+      "bytes": 256,
+      "producer": "relu"
+    }
+  },
+  "target": "cpu",
+  "artifact": "parts/part_12.hxbin"
+}

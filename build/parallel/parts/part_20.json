@@ -1,0 +1,66 @@
+{
+  "part": {
+    "id": 20,
+    "backend": "gpu",
+    "nodes": [
+      "sigmoid"
+    ],
+    "inputs": [
+      "linear_3"
+    ],
+    "outputs": [
+      "sigmoid"
+    ],
+    "est_us": 45.0,
+    "artifact": "",
+    "compile_flags": {
+      "target": "gpu"
+    }
+  },
+  "nodes": [
+    {
+      "id": "sigmoid",
+      "op": "sigmoid",
+      "inputs": [
+        "linear_3"
+      ],
+      "outputs": [
+        "sigmoid"
+      ],
+      "attrs": {},
+      "flops": 60,
+      "part": 20,
+      "backend": "gpu",
+      "name": "sigmoid",
+      "hint": "npu"
+    }
+  ],
+  "tensors": {
+    "linear_3": {
+      "id": "linear_3",
+      "dtype": "f32",
+      "shape": [
+        1,
+        10
+      ],
+      "kind": "activation",
+      "offset": -1,
+      "bytes": 40,
+      "producer": "linear_3"
+    },
+    "sigmoid": {
+      "id": "sigmoid",
+      "dtype": "f32",
+      "shape": [
+        1,
+        10
+      ],
+      "kind": "output",
+      "offset": -1,
+      "bytes": 40,
+      "producer": "sigmoid"
+    }
+  },
+  "target": "gpu",
+  "artifact": "parts/part_20.hxbin"
+}

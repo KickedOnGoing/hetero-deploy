@@ -1,0 +1,248 @@
+{
+  "part": {
+    "id": 3,
+    "backend": "cpu",
+    "nodes": [
+      "cat",
+      "linear_2",
+      "gelu",
+      "linear_3",
+      "sigmoid"
+    ],
+    "inputs": [
+      "relu",
+      "silu_2"
+    ],
+    "outputs": [
+      "sigmoid"
+    ],
+    "est_us": 12.207,
+    "artifact": "",
+    "compile_flags": {
+      "target": "cpu"
+    }
+  },
+  "nodes": [
+    {
+      "id": "cat",
+      "op": "concat",
+      "inputs": [
+        "relu",
+        "silu_2"
+      ],
+      "outputs": [
+        "cat"
+      ],
+      "attrs": {
+        "dim": 1
+      },
+      "flops": 0,
+      "part": 3,
+      "backend": "cpu",
+      "name": "cat",
+      "hint": "npu"
+    },
+    {
+      "id": "linear_2",
+      "op": "linear",
+      "inputs": [
+        "cat",
+        "p_head_0_weight",
+        "p_head_0_bias"
+      ],
+      "outputs": [
+        "linear_2"
+      ],
+      "attrs": {},
+      "flops": 16448,
+      "part": 3,
+      "backend": "cpu",
+      "name": "linear_2",
+      "hint": "npu"
+    },
+    {
+      "id": "gelu",
+      "op": "gelu",
+      "inputs": [
+        "linear_2"
+      ],
+      "outputs": [
+        "gelu"
+      ],
+      "attrs": {},
+      "flops": 384,
+      "part": 3,
+      "backend": "cpu",
+      "name": "gelu",
+      "hint": "npu"
+    },
+    {
+      "id": "linear_3",
+      "op": "linear",
+      "inputs": [
+        "gelu",
+        "p_head_2_weight",
+        "p_head_2_bias"
+      ],
+      "outputs": [
+        "linear_3"
+      ],
+      "attrs": {},
+      "flops": 1290,
+      "part": 3,
+      "backend": "cpu",
+      "name": "linear_3",
+      "hint": "npu"
+    },
+    {
+      "id": "sigmoid",
+      "op": "sigmoid",
+      "inputs": [
+        "linear_3"
+      ],
+      "outputs": [
+        "sigmoid"
+      ],
+      "attrs": {},
+      "flops": 60,
+      "part": 3,
+      "backend": "cpu",
+      "name": "sigmoid",
+      "hint": "npu"
+    }
+  ],
+  "tensors": {
+    "relu": {
+      "id": "relu",
+      "dtype": "f32",
+      "shape": [
+        1,
+        64
+      ],
+      "kind": "activation",
+      "offset": -1,
+      "bytes": 256,
+      "producer": "relu"
+    },
+    "silu_2": {
+      "id": "silu_2",
+      "dtype": "f32",
+      "shape": [
+        1,
+        64
+      ],
+      "kind": "activation",
+      "offset": -1,
+      "bytes": 256,
+      "producer": "silu_2"
+    },
+    "cat": {
+      "id": "cat",
+      "dtype": "f32",
+      "shape": [
+        1,
+        128
+      ],
+      "kind": "activation",
+      "offset": -1,
+      "bytes": 512,
+      "producer": "cat"
+    },
+    "p_head_0_weight": {
+      "id": "p_head_0_weight",
+      "dtype": "f32",
+      "shape": [
+        64,
+        128
+      ],
+      "kind": "weight",
+      "offset": 324992,
+      "bytes": 32768,
+      "producer": ""
+    },
+    "p_head_0_bias": {
+      "id": "p_head_0_bias",
+      "dtype": "f32",
+      "shape": [
+        64
+      ],
+      "kind": "weight",
+      "offset": 357760,
+      "bytes": 256,
+      "producer": ""
+    },
+    "linear_2": {
+      "id": "linear_2",
+      "dtype": "f32",
+      "shape": [
+        1,
+        64
+      ],
+      "kind": "activation",
+      "offset": -1,
+      "bytes": 256,
+      "producer": "linear_2"
+    },
+    "gelu": {
+      "id": "gelu",
+      "dtype": "f32",
+      "shape": [
+        1,
+        64
+      ],
+      "kind": "activation",
+      "offset": -1,
+      "bytes": 256,
+      "producer": "gelu"
+    },
+    "p_head_2_weight": {
+      "id": "p_head_2_weight",
+      "dtype": "f32",
+      "shape": [
+        10,
+        64
+      ],
+      "kind": "weight",
+      "offset": 358016,
+      "bytes": 2560,
+      "producer": ""
+    },
+    "p_head_2_bias": {
+      "id": "p_head_2_bias",
+      "dtype": "f32",
+      "shape": [
+        10
+      ],
+      "kind": "weight",
+      "offset": 360576,
+      "bytes": 40,
+      "producer": ""
+    },
+    "linear_3": {
+      "id": "linear_3",
+      "dtype": "f32",
+      "shape": [
+        1,
+        10
+      ],
+      "kind": "activation",
+      "offset": -1,
+      "bytes": 40,
+      "producer": "linear_3"
+    },
+    "sigmoid": {
+      "id": "sigmoid",
+      "dtype": "f32",
+      "shape": [
+        1,
+        10
+      ],
+      "kind": "output",
+      "offset": -1,
+      "bytes": 40,
+      "producer": "sigmoid"
+    }
+  },
+  "target": "cpu",
+  "artifact": "parts/part_3.hxbin"
+}

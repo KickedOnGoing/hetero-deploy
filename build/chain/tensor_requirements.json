@@ -1,0 +1,4 @@
+{
+  "_note": "零拷贝成立的前提是上下游后端要求相同的 buffer type / layout / stride。若 NPU 只接受特定对齐的 AHWB 而 GPU 产出 GL texture，则每帧都要转换一次，收益会被吃掉 —— 这是上板前必须验证的握手项。",
+  "requirements": []
+}

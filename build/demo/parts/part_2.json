@@ -1,0 +1,390 @@
+{
+  "part": {
+    "id": 2,
+    "backend": "npu",
+    "nodes": [
+      "conv2d_1",
+      "relu__1",
+      "conv2d_2",
+      "relu__2",
+      "adaptive_avg_pool2d",
+      "flatten",
+      "linear",
+      "relu"
+    ],
+    "inputs": [
+      "relu_"
+    ],
+    "outputs": [
+      "relu"
+    ],
+    "est_us": 232.178,
+    "artifact": "",
+    "compile_flags": {
+      "target": "npu"
+    }
+  },
+  "nodes": [
+    {
+      "id": "conv2d_1",
+      "op": "conv2d",
+      "inputs": [
+        "relu_",
+        "p_branch_a_0_0_weight",
+        "conv2d_1_bias"
+      ],
+      "outputs": [
+        "batch_norm_1"
+      ],
+      "attrs": {
+        "stride": [
+          1,
+          1
+        ],
+        "padding": [
+          1,
+          1
+        ],
+        "dilation": [
+          1,
+          1
+        ],
+        "groups": 1
+      },
+      "flops": 340328448,
+      "part": 2,
+      "backend": "npu",
+      "name": "conv2d_1",
+      "hint": "npu"
+    },
+    {
+      "id": "relu__1",
+      "op": "relu",
+      "inputs": [
+        "batch_norm_1"
+      ],
+      "outputs": [
+        "relu__1"
+      ],
+      "attrs": {},
+      "flops": 1179648,
+      "part": 2,
+      "backend": "npu",
+      "name": "relu__1",
+      "hint": "npu"
+    },
+    {
+      "id": "conv2d_2",
+      "op": "conv2d",
+      "inputs": [
+        "relu__1",
+        "p_branch_a_1_0_weight",
+        "conv2d_2_bias"
+      ],
+      "outputs": [
+        "batch_norm_2"
+      ],
+      "attrs": {
+        "stride": [
+          1,
+          1
+        ],
+        "padding": [
+          1,
+          1
+        ],
+        "dilation": [
+          1,
+          1
+        ],
+        "groups": 1
+      },
+      "flops": 680067072,
+      "part": 2,
+      "backend": "npu",
+      "name": "conv2d_2",
+      "hint": "npu"
+    },
+    {
+      "id": "relu__2",
+      "op": "relu",
+      "inputs": [
+        "batch_norm_2"
+      ],
+      "outputs": [
+        "relu__2"
+      ],
+      "attrs": {},
+      "flops": 1179648,
+      "part": 2,
+      "backend": "npu",
+      "name": "relu__2",
+      "hint": "npu"
+    },
+    {
+      "id": "adaptive_avg_pool2d",
+      "op": "global_avg_pool",
+      "inputs": [
+        "relu__2"
+      ],
+      "outputs": [
+        "adaptive_avg_pool2d"
+      ],
+      "attrs": {},
+      "flops": 1179648,
+      "part": 2,
+      "backend": "npu",
+      "name": "adaptive_avg_pool2d",
+      "hint": "npu"
+    },
+    {
+      "id": "flatten",
+      "op": "flatten",
+      "inputs": [
+        "adaptive_avg_pool2d"
+      ],
+      "outputs": [
+        "flatten"
+      ],
+      "attrs": {
+        "start_dim": 1
+      },
+      "flops": 0,
+      "part": 2,
+      "backend": "npu",
+      "name": "flatten",
+      "hint": "npu"
+    },
+    {
+      "id": "linear",
+      "op": "linear",
+      "inputs": [
+        "flatten",
+        "p_branch_a_4_weight",
+        "p_branch_a_4_bias"
+      ],
+      "outputs": [
+        "linear"
+      ],
+      "attrs": {},
+      "flops": 8256,
+      "part": 2,
+      "backend": "npu",
+      "name": "linear",
+      "hint": "npu"
+    },
+    {
+      "id": "relu",
+      "op": "relu",
+      "inputs": [
+        "linear"
+      ],
+      "outputs": [
+        "relu"
+      ],
+      "attrs": {},
+      "flops": 128,
+      "part": 2,
+      "backend": "npu",
+      "name": "relu",
+      "hint": "npu"
+    }
+  ],
+  "tensors": {
+    "relu_": {
+      "id": "relu_",
+      "dtype": "f32",
+      "shape": [
+        1,
+        32,
+        96,
+        96
+      ],
+      "kind": "activation",
+      "offset": -1,
+      "bytes": 1179648,
+      "producer": "relu_"
+    },
+    "p_branch_a_0_0_weight": {
+      "id": "p_branch_a_0_0_weight",
+      "dtype": "f32",
+      "shape": [
+        64,
+        32,
+        3,
+        3
+      ],
+      "kind": "weight",
+      "offset": 3712,
+      "bytes": 73728,
+      "producer": ""
+    },
+    "conv2d_1_bias": {
+      "id": "conv2d_1_bias",
+      "dtype": "f32",
+      "shape": [
+        64
+      ],
+      "kind": "bias",
+      "offset": 362048,
+      "bytes": 256,
+      "producer": ""
+    },
+    "batch_norm_1": {
+      "id": "batch_norm_1",
+      "dtype": "f32",
+      "shape": [
+        1,
+        64,
+        96,
+        96
+      ],
+      "kind": "activation",
+      "offset": -1,
+      "bytes": 2359296,
+      "producer": "conv2d_1"
+    },
+    "relu__1": {
+      "id": "relu__1",
+      "dtype": "f32",
+      "shape": [
+        1,
+        64,
+        96,
+        96
+      ],
+      "kind": "activation",
+      "offset": -1,
+      "bytes": 2359296,
+      "producer": "relu__1"
+    },
+    "p_branch_a_1_0_weight": {
+      "id": "p_branch_a_1_0_weight",
+      "dtype": "f32",
+      "shape": [
+        64,
+        64,
+        3,
+        3
+      ],
+      "kind": "weight",
+      "offset": 77952,
+      "bytes": 147456,
+      "producer": ""
+    },
+    "conv2d_2_bias": {
+      "id": "conv2d_2_bias",
+      "dtype": "f32",
+      "shape": [
+        64
+      ],
+      "kind": "bias",
+      "offset": 362304,
+      "bytes": 256,
+      "producer": ""
+    },
+    "batch_norm_2": {
+      "id": "batch_norm_2",
+      "dtype": "f32",
+      "shape": [
+        1,
+        64,
+        96,
+        96
+      ],
+      "kind": "activation",
+      "offset": -1,
+      "bytes": 2359296,
+      "producer": "conv2d_2"
+    },
+    "relu__2": {
+      "id": "relu__2",
+      "dtype": "f32",
+      "shape": [
+        1,
+        64,
+        96,
+        96
+      ],
+      "kind": "activation",
+      "offset": -1,
+      "bytes": 2359296,
+      "producer": "relu__2"
+    },
+    "adaptive_avg_pool2d": {
+      "id": "adaptive_avg_pool2d",
+      "dtype": "f32",
+      "shape": [
+        1,
+        64,
+        1,
+        1
+      ],
+      "kind": "activation",
+      "offset": -1,
+      "bytes": 256,
+      "producer": "adaptive_avg_pool2d"
+    },
+    "flatten": {
+      "id": "flatten",
+      "dtype": "f32",
+      "shape": [
+        1,
+        64
+      ],
+      "kind": "activation",
+      "offset": -1,
+      "bytes": 256,
+      "producer": "flatten"
+    },
+    "p_branch_a_4_weight": {
+      "id": "p_branch_a_4_weight",
+      "dtype": "f32",
+      "shape": [
+        64,
+        64
+      ],
+      "kind": "weight",
+      "offset": 225920,
+      "bytes": 16384,
+      "producer": ""
+    },
+    "p_branch_a_4_bias": {
+      "id": "p_branch_a_4_bias",
+      "dtype": "f32",
+      "shape": [
+        64
+      ],
+      "kind": "weight",
+      "offset": 242304,
+      "bytes": 256,
+      "producer": ""
+    },
+    "linear": {
+      "id": "linear",
+      "dtype": "f32",
+      "shape": [
+        1,
+        64
+      ],
+      "kind": "activation",
+      "offset": -1,
+      "bytes": 256,
+      "producer": "linear"
+    },
+    "relu": {
+      "id": "relu",
+      "dtype": "f32",
+      "shape": [
+        1,
+        64
+      ],
+      "kind": "activation",
+      "offset": -1,
+      "bytes": 256,
+      "producer": "relu"
+    }
+  },
+  "target": "npu",
+  "artifact": "parts/part_2.hxbin"
+}

@@ -1,0 +1,70 @@
+{
+  "part": {
+    "id": 7,
+    "backend": "npu",
+    "nodes": [
+      "relu__2"
+    ],
+    "inputs": [
+      "batch_norm_2"
+    ],
+    "outputs": [
+      "relu__2"
+    ],
+    "est_us": 90.024,
+    "artifact": "",
+    "compile_flags": {
+      "target": "npu"
+    }
+  },
+  "nodes": [
+    {
+      "id": "relu__2",
+      "op": "relu",
+      "inputs": [
+        "batch_norm_2"
+      ],
+      "outputs": [
+        "relu__2"
+      ],
+      "attrs": {},
+      "flops": 131072,
+      "part": 7,
+      "backend": "npu",
+      "name": "relu__2",
+      "hint": "npu"
+    }
+  ],
+  "tensors": {
+    "batch_norm_2": {
+      "id": "batch_norm_2",
+      "dtype": "f32",
+      "shape": [
+        1,
+        64,
+        32,
+        32
+      ],
+      "kind": "activation",
+      "offset": -1,
+      "bytes": 262144,
+      "producer": "conv2d_2"
+    },
+    "relu__2": {
+      "id": "relu__2",
+      "dtype": "f32",
+      "shape": [
+        1,
+        64,
+        32,
+        32
+      ],
+      "kind": "activation",
+      "offset": -1,
+      "bytes": 262144,
+      "producer": "relu__2"
+    }
+  },
+  "target": "npu",
+  "artifact": "parts/part_7.hxbin"
+}

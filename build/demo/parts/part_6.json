@@ -1,0 +1,69 @@
+{
+  "part": {
+    "id": 6,
+    "backend": "cpu",
+    "nodes": [
+      "adaptive_avg_pool2d"
+    ],
+    "inputs": [
+      "relu__2"
+    ],
+    "outputs": [
+      "adaptive_avg_pool2d"
+    ],
+    "est_us": 17.296,
+    "artifact": "",
+    "compile_flags": {
+      "target": "cpu"
+    }
+  },
+  "nodes": [
+    {
+      "id": "adaptive_avg_pool2d",
+      "op": "global_avg_pool",
+      "inputs": [
+        "relu__2"
+      ],
+      "outputs": [
+        "adaptive_avg_pool2d"
+      ],
+      "attrs": {},
+      "flops": 524288,
+      "part": 6,
+      "backend": "cpu",
+      "name": "adaptive_avg_pool2d"
+    }
+  ],
+  "tensors": {
+    "relu__2": {
+      "id": "relu__2",
+      "dtype": "f32",
+      "shape": [
+        1,
+        64,
+        64,
+        64
+      ],
+      "kind": "activation",
+      "offset": -1,
+      "bytes": 1048576,
+      "producer": "relu__2"
+    },
+    "adaptive_avg_pool2d": {
+      "id": "adaptive_avg_pool2d",
+      "dtype": "f32",
+      "shape": [
+        1,
+        64,
+        1,
+        1
+      ],
+      "kind": "activation",
+      "offset": -1,
+      "bytes": 256,
+      "producer": "adaptive_avg_pool2d"
+    }
+  },
+  "target": "cpu",
+  "artifact": "parts/part_6.hxbin"
+}

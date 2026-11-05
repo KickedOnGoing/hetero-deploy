@@ -1,0 +1,93 @@
+{
+  "_note": "零拷贝成立的前提是上下游后端要求相同的 buffer type / layout / stride。若 NPU 只接受特定对齐的 AHWB 而 GPU 产出 GL texture，则每帧都要转换一次，收益会被吃掉 —— 这是上板前必须验证的握手项。",
+  "requirements": [
+    {
+      "tensor": "conv2d_3",
+      "from_part": 0,
+      "to_part": 1,
+      "src_backend": "npu",
+      "dst_backend": "gpu",
+      "bytes": 1179648,
+      "dtype": "f32",
+      "shape": [
+        1,
+        32,
+        96,
+        96
+      ],
+      "alignment": 128,
+      "src_layout": "NHWC",
+      "dst_layout": "NHWC",
+      "layout_conversion": false,
+      "zero_copy": true,
+      "buffer_type": "AHardwareBuffer / DMA-BUF",
+      "sync": "LiteRtEvent (sync fence fd)",
+      "cost_us": 56.234
+    },
+    {
+      "tensor": "relu_",
+      "from_part": 0,
+      "to_part": 2,
+      "src_backend": "npu",
+      "dst_backend": "npu",
+      "bytes": 1179648,
+      "dtype": "f32",
+      "shape": [
+        1,
+        32,
+        96,
+        96
+      ],
+      "alignment": 64,
+      "src_layout": "NHWC",
+      "dst_layout": "NHWC",
+      "layout_conversion": false,
+      "zero_copy": true,
+      "buffer_type": "host shared",
+      "sync": "intra-part",
+      "cost_us": 0.0
+    },
+    {
+      "tensor": "relu",
+      "from_part": 2,
+      "to_part": 3,
+      "src_backend": "npu",
+      "dst_backend": "gpu",
+      "bytes": 256,
+      "dtype": "f32",
+      "shape": [
+        1,
+        64
+      ],
+      "alignment": 128,
+      "src_layout": "NHWC",
+      "dst_layout": "NHWC",
+      "layout_conversion": false,
+      "zero_copy": true,
+      "buffer_type": "AHardwareBuffer / DMA-BUF",
+      "sync": "LiteRtEvent (sync fence fd)",
+      "cost_us": 35.005
+    },
+    {
+      "tensor": "silu_2",
+      "from_part": 1,
+      "to_part": 3,
+      "src_backend": "gpu",
+      "dst_backend": "gpu",
+      "bytes": 256,
+      "dtype": "f32",
+      "shape": [
+        1,
+        64
+      ],
+      "alignment": 64,
+      "src_layout": "NHWC",
+      "dst_layout": "NHWC",
+      "layout_conversion": false,
+      "zero_copy": true,
+      "buffer_type": "host shared",
+      "sync": "intra-part",
+      "cost_us": 0.0
+    }
+  ]
+}

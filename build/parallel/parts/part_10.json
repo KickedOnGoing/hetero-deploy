@@ -1,0 +1,70 @@
+{
+  "part": {
+    "id": 10,
+    "backend": "gpu",
+    "nodes": [
+      "adaptive_avg_pool2d_1"
+    ],
+    "inputs": [
+      "silu_1"
+    ],
+    "outputs": [
+      "adaptive_avg_pool2d_1"
+    ],
+    "est_us": 45.021,
+    "artifact": "",
+    "compile_flags": {
+      "target": "gpu"
+    }
+  },
+  "nodes": [
+    {
+      "id": "adaptive_avg_pool2d_1",
+      "op": "global_avg_pool",
+      "inputs": [
+        "silu_1"
+      ],
+      "outputs": [
+        "adaptive_avg_pool2d_1"
+      ],
+      "attrs": {},
+      "flops": 65536,
+      "part": 10,
+      "backend": "gpu",
+      "name": "adaptive_avg_pool2d_1",
+      "hint": "gpu"
+    }
+  ],
+  "tensors": {
+    "silu_1": {
+      "id": "silu_1",
+      "dtype": "f32",
+      "shape": [
+        1,
+        32,
+        32,
+        32
+      ],
+      "kind": "activation",
+      "offset": -1,
+      "bytes": 131072,
+      "producer": "silu_1"
+    },
+    "adaptive_avg_pool2d_1": {
+      "id": "adaptive_avg_pool2d_1",
+      "dtype": "f32",
+      "shape": [
+        1,
+        32,
+        1,
+        1
+      ],
+      "kind": "activation",
+      "offset": -1,
+      "bytes": 128,
+      "producer": "adaptive_avg_pool2d_1"
+    }
+  },
+  "target": "gpu",
+  "artifact": "parts/part_10.hxbin"
+}
