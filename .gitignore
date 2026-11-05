@@ -17,3 +17,6 @@ runtime/build/
 
 # 说明：build/ 下的部署包（manifest / weights.bin / 敏感性分析结果）
 # 是本项目的实测交付物，体积约 1.6MB，随仓库保留以便直接查看。
+
+# 离线仓库包（git bundle，本地导出用，不纳入版本库）
+*.bundle
